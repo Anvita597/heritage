@@ -1,0 +1,1723 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>HeritageConnect — Authentic Indian Handicrafts Direct from Master Artisans</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            primary: "#0F1B29",
+            secondary: "#B8860B",
+            "secondary-dark": "#8B6508",
+            "secondary-light": "#FFF8E7",
+            surface: "#FBF9F6",
+            "surface-card": "#FFFFFF",
+            "surface-muted": "#F4EFEA",
+            border: "#E7DFD5",
+            accent: "#C85A32",
+            "text-main": "#1A1A1A",
+            "text-muted": "#5C5C5C"
+          },
+          fontFamily: {
+            serif: ["'Playfair Display'", "Georgia", "serif"],
+            sans: ["'Plus Jakarta Sans'", "system-ui", "sans-serif"]
+          }
+        }
+      }
+    };
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+      font-size: 19px;
+      line-height: 1;
+      display: inline-block;
+      vertical-align: middle;
+    }
+    .craft-shadow {
+      box-shadow: 0 4px 20px -2px rgba(15, 27, 41, 0.07);
+    }
+    .craft-shadow:hover {
+      box-shadow: 0 10px 25px -4px rgba(15, 27, 41, 0.12);
+    }
+    .custom-scroll::-webkit-scrollbar {
+      height: 4px;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: #B8860B;
+      border-radius: 4px;
+    }
+  </style>
+<!-- Firebase 10 Compat CDN Scripts -->
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+<!-- Heritage Firebase DB Layer -->
+<script src="firebase-config.js"></script>
+<script src="firebase-db.js"></script>
+</head>
+<body class="bg-surface text-text-main font-sans antialiased min-h-screen flex flex-col">
+<!-- ========================================================================= -->
+<!-- 1. HACKATHON LIVE DEMO TOUR SWITCHER BAR                                  -->
+<!-- ========================================================================= -->
+<header class="sticky top-0 z-50 bg-primary text-white border-b border-secondary/30 shadow-md">
+<div class="max-w-7xl mx-auto px-4 py-2 flex items-center justify-between gap-3 overflow-x-auto custom-scroll text-xs">
+<div class="flex items-center gap-2 whitespace-nowrap pr-3 border-r border-white/20 shrink-0">
+<span class="w-2 h-2 rounded-full bg-secondary animate-ping"></span>
+<span class="font-bold tracking-wider uppercase text-secondary">Demo Tour</span>
+</div>
+<nav class="flex items-center gap-1.5 shrink-0" id="tour-nav">
+<button class="px-3 py-1 rounded bg-white/10 hover:bg-secondary text-white font-medium transition-all" id="tab-splash" onclick="showScreen('screen-splash')">
+           Splash 
+        </button>
+<button class="px-3 py-1 rounded bg-secondary text-white font-bold shadow transition-all" id="tab-home" onclick="showScreen('screen-home')">
+           Affordable Marketplace
+        </button>
+<button class="px-3 py-1 rounded bg-white/10 hover:bg-secondary text-white font-medium transition-all" id="tab-lineages" onclick="showScreen('screen-lineages')">
+           Craft Traditions
+        </button>
+
+<button class="px-3 py-1 rounded bg-white/10 hover:bg-secondary text-white font-medium transition-all" id="tab-artisan" onclick="showScreen('screen-artisan')">
+           Artisan Profile
+        </button>
+<button class="px-3 py-1 rounded bg-white/10 hover:bg-secondary text-white font-medium transition-all" id="tab-cart" onclick="toggleCartModal()">
+           Cart &amp; Checkout (<span id="cart-counter-nav">2</span>)
+        </button>
+<button class="px-3 py-1 rounded bg-white/10 hover:bg-secondary text-white font-medium transition-all" id="tab-portal" onclick="showScreen('screen-portal')">
+           Artisan Studio
+        </button>
+
+<a href="firebase-manager.html" target="_blank" class="px-2.5 py-1 rounded bg-secondary hover:bg-secondary-dark text-white font-bold transition-all flex items-center gap-1 shadow" id="tab-firebase" title="Manage Cloud Firestore Database">
+  <span class="material-symbols-outlined text-[14px]">database</span>
+  <span>Firebase DB</span>
+</a>
+</nav>
+<div class="hidden lg:flex items-center gap-1.5 text-secondary pl-3 border-l border-white/20 whitespace-nowrap">
+<span class="material-symbols-outlined text-[16px]">info</span>
+<span>Click tabs to explore</span>
+</div>
+</div>
+</header>
+<!-- ========================================================================= -->
+<!-- 2. TRANSPARENT VALUE PROPOSITION STRIP                                    -->
+<!-- ========================================================================= -->
+<aside class="bg-secondary-light border-b border-border py-2 px-4 text-xs">
+<div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3 text-text-main">
+<div class="flex items-center gap-1.5 font-medium">
+<span class="material-symbols-outlined text-secondary text-[17px]">handshake</span>
+<span><strong>100% Direct from Artisan:</strong> No showroom markup</span>
+</div>
+<div class="flex items-center gap-1.5 font-medium">
+<span class="material-symbols-outlined text-secondary text-[17px]">price_check</span>
+<span><strong>Honest Everyday Prices:</strong> Authentic art from only ₹450</span>
+</div>
+<div class="flex items-center gap-1.5 font-medium">
+<span class="material-symbols-outlined text-secondary text-[17px]">verified</span>
+<span><strong>Certified Quality:</strong> GI Tag &amp; natural non-toxic ingredients</span>
+</div>
+<button class="text-secondary-dark font-bold hover:underline flex items-center gap-1" onclick="togglePricingInfoModal()">
+<span>Why is this affordable?</span>
+<span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+</button>
+</div>
+</aside>
+<!-- ========================================================================= -->
+<!-- 3. TOP NAVIGATION BAR                                                     -->
+<!-- ========================================================================= -->
+<nav class="bg-surface border-b border-border py-3 px-4 sm:px-6">
+<div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3">
+<!-- Logo -->
+<div class="flex items-center justify-between w-full md:w-auto">
+<a class="flex items-center gap-2" href="javascript:void(0)" onclick="showScreen('screen-home')">
+<span class="w-9 h-9 rounded-lg bg-primary text-secondary font-serif text-xl font-bold flex items-center justify-center shadow-sm">H</span>
+<span class="font-serif text-2xl font-bold tracking-tight text-primary">HeritageConnect</span>
+</a>
+<button class="md:hidden p-2 text-primary" onclick="toggleCartModal()">
+<span class="material-symbols-outlined">shopping_bag</span>
+<span class="bg-secondary text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">2</span>
+</button>
+</div>
+<!-- Live Search with Instant Filter -->
+<div class="w-full md:max-w-lg">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-2.5 text-text-muted">search</span>
+<input class="w-full pl-10 pr-20 py-2 text-sm bg-white border border-border rounded-lg focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary" id="main-search-input" onkeyup="filterBySearch(this.value)" placeholder="Search teacups, clay sets, wooden toys, scarves, wall art..." type="text"/>
+<button class="absolute right-1.5 top-1.5 px-3 py-1 text-xs font-semibold bg-primary text-white rounded hover:bg-secondary transition-colors" onclick="filterBySearch(document.getElementById('main-search-input').value)">
+            Search
+          </button>
+
+<!-- Action items -->
+<div class="hidden md:flex items-center gap-5">
+<button class="text-sm font-semibold text-primary hover:text-secondary transition-colors" onclick="showScreen('screen-home')">Browse Catalog</button>
+<button class="text-sm text-text-muted hover:text-primary transition-colors" onclick="showScreen('screen-lineages')">8 Craft Lineages</button>
+<button class="text-sm text-text-muted hover:text-primary transition-colors" onclick="showScreen('screen-artisan')">Meet Artisans</button>
+<button class="text-xs px-3 py-1.5 font-bold border border-primary text-primary rounded hover:bg-primary hover:text-white transition-all" onclick="showScreen('screen-portal')">Artisan Portal</button>
+<button class="relative p-2 text-primary hover:text-secondary transition-colors" onclick="toggleCartModal()" title="View Cart">
+<span class="material-symbols-outlined text-[24px]">shopping_bag</span>
+<span class="absolute top-0 right-0 bg-secondary text-white text-[11px] font-bold w-4 h-4 rounded-full flex items-center justify-center" id="cart-counter-badge">2</span>
+</button>
+</div>
+</div>
+<a href="firebase-manager.html" target="_blank" class="text-xs px-3 py-1.5 font-bold bg-secondary hover:bg-secondary-dark text-white rounded transition-all flex items-center gap-1 shadow-sm" id="nav-btn-firebase" title="Open Cloud Firestore Database Control Panel">
+  <span class="material-symbols-outlined text-[15px]">database</span>
+  <span>Firebase DB</span>
+</a>
+</div>
+</div>
+</nav>
+<!-- ========================================================================= -->
+<!-- 4. MAIN CANVAS CONTENT                                                    -->
+<!-- ========================================================================= -->
+<main class="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 py-6" id="app-viewport">
+<!-- --------------------------------------------------------------------- -->
+<!-- VIEW A: INTRO / SPLASH SCREEN                                         -->
+<!-- --------------------------------------------------------------------- -->
+<section class="hidden py-10" id="screen-splash">
+<div class="text-center max-w-3xl mx-auto mb-10">
+<span class="inline-block px-3 py-1 rounded-full bg-secondary-light border border-secondary/30 text-secondary-dark text-xs font-bold uppercase tracking-wider mb-3">
+          Democratizing Traditional Indian Art
+        </span>
+<h1 class="font-serif text-4xl sm:text-5xl font-bold text-primary mb-4 leading-tight">
+          Handcrafted Indian Crafts, Priced for Everyday Homes.
+        </h1>
+<p class="text-base sm:text-lg text-text-muted mb-8 leading-relaxed">
+          Traditional Indian art shouldn't cost a fortune. By connecting you directly with hereditary village artisans, HeritageConnect removes multi-tier middlemen markups. You get genuine certified handcrafted art starting at ₹450, while artists receive 94% fair income.
+        </p>
+<div class="flex flex-wrap items-center justify-center gap-4">
+<button class="px-6 py-3.5 rounded-lg bg-primary hover:bg-secondary text-white font-bold text-sm shadow-md transition-all flex items-center gap-2" onclick="showScreen('screen-home')">
+<span class="material-symbols-outlined">storefront</span>
+<span>Explore 10 Affordable Crafts (From ₹450)</span>
+</button>
+<button class="px-5 py-3.5 rounded-lg border border-border bg-white hover:border-primary text-primary font-semibold text-sm transition-all" onclick="showScreen('screen-lineages')">
+            Learn About 8 Craft Traditions
+          </button>
+</div>
+</div>
+<!-- 3-Pillar Cards -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+<div class="bg-white border border-border rounded-xl p-6 craft-shadow">
+<div class="w-10 h-10 rounded-lg bg-secondary-light text-secondary-dark flex items-center justify-center font-bold mb-4">
+<span class="material-symbols-outlined text-2xl">brush</span>
+</div>
+<h3 class="font-serif text-lg font-bold text-primary mb-1">Authentic Materials Only</h3>
+<p class="text-xs text-text-muted leading-relaxed">Pure river silt, lead-free food glazes, vegetable dyes, and hand-chiseled woods. Certified free of artificial polymers.</p>
+</div>
+<div class="bg-white border border-border rounded-xl p-6 craft-shadow">
+<div class="w-10 h-10 rounded-lg bg-secondary-light text-secondary-dark flex items-center justify-center font-bold mb-4">
+<span class="material-symbols-outlined text-2xl">payments</span>
+</div>
+<h3 class="font-serif text-lg font-bold text-primary mb-1">Honest 50% Savings</h3>
+<p class="text-xs text-text-muted leading-relaxed">Art galleries charge 3x-5x markups. Buying direct delivers 40% to 60% savings to your wallet while giving artisans a living wage.</p>
+</div>
+<div class="bg-white border border-border rounded-xl p-6 craft-shadow">
+<div class="w-10 h-10 rounded-lg bg-secondary-light text-secondary-dark flex items-center justify-center font-bold mb-4">
+<span class="material-symbols-outlined text-2xl">verified_user</span>
+</div>
+<h3 class="font-serif text-lg font-bold text-primary mb-1">GI Tag Authenticity</h3>
+<p class="text-xs text-text-muted leading-relaxed">Every craft includes an artisan biography card and official Geographical Indication code verifying its traditional roots.</p>
+</div>
+</div>
+</section>
+<!-- --------------------------------------------------------------------- -->
+<!-- VIEW B: HOME MARKETPLACE (10 HIGH-QUALITY ACCESSIBLE PRODUCTS)         -->
+<!-- --------------------------------------------------------------------- -->
+<section class="block" id="screen-home">
+<!-- Friendly Hero Banner -->
+<div class="bg-gradient-to-r from-surface-muted to-white border border-border rounded-2xl p-6 sm:p-8 mb-8 flex flex-col md:flex-row items-center justify-between gap-6">
+<div class="max-w-2xl">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded bg-secondary text-white text-[11px] font-bold uppercase tracking-wider mb-2">
+            Genuine Quality • Honest Everyday Pricing
+          </span>
+<h2 class="font-serif text-2xl sm:text-4xl font-bold text-primary mb-2 leading-tight">
+            Discover 10 Masterpieces Made for Everyday Living
+          </h2>
+<p class="text-sm text-text-muted mb-4">
+            Experience the warmth of Indian handmade art without high luxury prices. Each piece is crafted by hereditary artisans using all-natural ingredients.
+          </p>
+<div class="flex flex-wrap items-center gap-3">
+<button class="px-4 py-2 rounded bg-primary text-white text-xs font-bold hover:bg-secondary transition-colors" onclick="filterByPrice('all')">
+              View All 10 Crafts
+            </button>
+<button class="px-4 py-2 rounded bg-white border border-border text-primary text-xs font-bold hover:border-secondary transition-colors" onclick="filterByPrice('under-1000')">
+              Shop Under ₹1,000 ✨
+            </button>
+<button class="text-xs font-semibold text-secondary-dark hover:underline flex items-center gap-1" onclick="togglePricingInfoModal()">
+<span class="material-symbols-outlined text-[15px]">help</span>
+              How we keep prices low
+            </button>
+</div>
+</div>
+<div class="hidden lg:block text-center p-4 bg-white rounded-xl border border-border min-w-[220px] shadow-sm">
+<span class="material-symbols-outlined text-secondary text-4xl mb-1">savings</span>
+<p class="font-bold text-primary text-sm">Direct Artisan Guarantee</p>
+<p class="text-xs text-text-muted mt-1">94% of your payment is credited directly into artisan cooperative accounts.</p>
+</div>
+</div>
+<!-- PRICE & CATEGORY FILTER BAR -->
+<div class="bg-white border border-border rounded-xl p-4 mb-8 shadow-sm">
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+<!-- Price pills -->
+<div class="flex items-center gap-2 overflow-x-auto pb-1 custom-scroll" id="price-filters">
+<span class="text-xs font-bold text-text-muted uppercase shrink-0 mr-1">Filter by Price:</span>
+<button class="price-btn px-3 py-1.5 rounded-full text-xs font-semibold bg-primary text-white whitespace-nowrap transition-colors" id="btn-price-all" onclick="filterByPrice('all')">
+              All Prices (10)
+            </button>
+<button class="price-btn px-3 py-1.5 rounded-full text-xs font-semibold bg-surface-muted text-text-main hover:bg-border whitespace-nowrap transition-colors" id="btn-price-under-1000" onclick="filterByPrice('under-1000')">
+              Under ₹1,000 (4)
+            </button>
+<button class="price-btn px-3 py-1.5 rounded-full text-xs font-semibold bg-surface-muted text-text-main hover:bg-border whitespace-nowrap transition-colors" id="btn-price-1000-2000" onclick="filterByPrice('1000-2000')">
+              ₹1,000 – ₹2,000 (3)
+            </button>
+<button class="price-btn px-3 py-1.5 rounded-full text-xs font-semibold bg-surface-muted text-text-main hover:bg-border whitespace-nowrap transition-colors" id="btn-price-2000-3500" onclick="filterByPrice('2000-3500')">
+              ₹2,000 – ₹3,500 (3)
+            </button>
+<button class="price-btn px-3 py-1.5 rounded-full text-xs font-semibold bg-secondary-light border border-secondary/40 text-secondary-dark whitespace-nowrap transition-colors" id="btn-price-gifts" onclick="filterByPrice('gifts')">
+              Gift Sets Under ₹800 🎁
+            </button>
+</div>
+<!-- Craft Type select -->
+<div class="flex items-center gap-2 shrink-0">
+<span class="text-xs font-bold text-text-muted uppercase">Craft Form:</span>
+<select class="text-xs py-1.5 px-3 rounded-lg border border-border bg-white font-medium focus:border-secondary focus:outline-none" id="craft-category-dropdown" onchange="filterByCategoryDropdown(this.value)">
+<option value="all">All Traditions (8 Regions)</option>
+<option value="pottery">Pottery &amp; Terracotta</option>
+<option value="toys">Traditional Wood Toys</option>
+<option value="paintings">Madhubani &amp; Kalamkari Art</option>
+<option value="metal">Hand-Etched Brass</option>
+<option value="textiles">Handloom Weaves</option>
+</select>
+</div>
+</div>
+</div>
+<!-- Catalog Header -->
+<div class="flex items-center justify-between mb-6">
+<div>
+<h3 class="font-serif text-xl sm:text-2xl font-bold text-primary flex items-center gap-2">
+<span>Handcrafted Catalog</span>
+<span class="text-xs bg-secondary-light text-secondary-dark font-bold px-2 py-0.5 rounded-full" id="items-count-badge">10 Items Showing</span>
+</h3>
+<p class="text-xs text-text-muted mt-0.5">Crafted with verified artisan hours, natural materials, and transparent direct savings.</p>
+</div>
+<div class="text-xs text-text-muted">
+<span>Sort:</span>
+<select class="ml-1 text-xs py-1 px-2 border border-border rounded bg-white" onchange="sortItems(this.value)">
+<option value="featured">Featured First</option>
+<option value="price-asc">Price: Low to High</option>
+<option value="price-desc">Price: High to Low</option>
+<option value="rating">Top Rated</option>
+</select>
+</div>
+</div>
+<!-- 10 PRODUCT CARDS GRID -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-16" id="products-grid">
+<!-- ITEM 1: ₹450 Terracotta Incense & Diya Set -->
+<article class="product-item bg-white border border-border rounded-xl overflow-hidden flex flex-col craft-shadow" data-cat="pottery" data-id="1" data-price="450" data-tag="under-1000 gifts">
+<div class="relative aspect-[4/3] bg-surface-muted overflow-hidden">
+<img alt="Terracotta Incense and Diya Set" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBzveeSzp_SMVzsrCDLk-nOK1WmMvvJwTAZ8jfKaQ65axuKn-4WoMS_KZkQMUfq_FafwbRDV0hVkJ0HFQLTU9eGhn0QXZw5BmvpUTft4a0IoYCS5QNbnIRe_L01AB2GJdeubL8r0N944vzp_qsXgdQwf7X8JyLyX-p6-n4FL1ZkJAk9wtQbh5XyrLn8PUnR_EGDP_nFcyDiO2QQ-OM2Fk4Y2ZZX5_fFWBaVVS227F8l"/>
+<span class="absolute top-2 left-2 bg-white/95 px-2 py-0.5 rounded text-[10px] font-bold text-secondary-dark border border-border">
+              🌿 100% River Silt Clay
+            </span>
+<span class="absolute top-2 right-2 bg-primary text-white text-[10px] font-semibold px-1.5 py-0.5 rounded">
+              Craft: 1 Day
+            </span>
+</div>
+<div class="p-4 flex-1 flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between text-xs text-text-muted mb-1">
+<span class="font-bold text-secondary-dark uppercase text-[10px] tracking-wider">Terracotta • Gorakhpur</span>
+<span class="font-bold text-primary">⭐ 4.9 <span class="text-text-muted text-[10px]">(84)</span></span>
+</div>
+<h4 class="font-serif text-base font-bold text-primary mb-1">Terracotta Incense &amp; Diya Set</h4>
+<p class="text-xs text-text-muted mb-2">By Master Ram Prasad • Gorakhpur Cluster</p>
+<span class="inline-block px-2 py-0.5 rounded bg-surface-muted text-[10px] text-text-muted mb-3">
+                Lead-Free Smoke Fired • Natural Earth
+              </span>
+</div>
+<div class="pt-3 border-t border-border/60">
+<div class="flex items-baseline gap-2 mb-2.5">
+<span class="text-lg font-bold text-primary font-serif">₹450</span>
+<span class="line-through text-text-muted text-xs">₹900 retail</span>
+<span class="text-[10px] font-bold text-green-700 bg-green-50 px-1.5 py-0.5 rounded">50% direct saving</span>
+</div>
+<div class="grid grid-cols-2 gap-2">
+<button class="py-2 px-3 rounded bg-primary text-white hover:bg-secondary text-xs font-bold text-center transition-colors" onclick="addToCart('Terracotta Incense &amp; Diya Set', 450)">
+                  Add to Cart
+                </button>
+<button class="py-2 px-2 rounded border border-border hover:border-primary text-primary text-xs font-semibold text-center transition-colors" onclick="openStoryModal(1)">
+                  Quality &amp; Story
+                </button>
+</div>
+</div>
+</div>
+</article>
+<!-- ITEM 2: ₹550 Madhubani Folk Art Coasters Set -->
+<article class="product-item bg-white border border-border rounded-xl overflow-hidden flex flex-col craft-shadow" data-cat="paintings" data-id="2" data-price="550" data-tag="under-1000 gifts">
+<div class="relative aspect-[4/3] bg-surface-muted overflow-hidden">
+<img alt="Madhubani Hand-painted Coasters" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCQloTU6n-Ogz1D4JwtRX9sLwSzRSP4_ETOe_92LPLCfZM-QkvRw1eqnZQyu7qiFvH_fRAaokg84Ang8YHndo2uc3lq7yyU0AgjQINGrKobybUEhZS81FLJqonUkoGvpcsb5yTSgEMRJDNNBHhu75unluxiv0gBPUI78REMnpwh8DwKTfO0yTcBb_CAsGL2iTxs9LjxujNIvdo7cNJdU4n_3x_k49HOvO1riLY3DV02"/>
+<span class="absolute top-2 left-2 bg-white/95 px-2 py-0.5 rounded text-[10px] font-bold text-secondary-dark border border-border">
+              🎨 Turmeric &amp; Soot Inks
+            </span>
+<span class="absolute top-2 right-2 bg-primary text-white text-[10px] font-semibold px-1.5 py-0.5 rounded">
+              Craft: 2 Days
+            </span>
+</div>
+<div class="p-4 flex-1 flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between text-xs text-text-muted mb-1">
+<span class="font-bold text-secondary-dark uppercase text-[10px] tracking-wider">Madhubani • Bihar</span>
+<span class="font-bold text-primary">⭐ 4.9 <span class="text-text-muted text-[10px]">(112)</span></span>
+</div>
+<h4 class="font-serif text-base font-bold text-primary mb-1">Hand-Painted Coaster Set (4 Pcs)</h4>
+<p class="text-xs text-text-muted mb-2">By Sita Devi Women's Guild • Mithila</p>
+<span class="inline-block px-2 py-0.5 rounded bg-surface-muted text-[10px] text-text-muted mb-3">
+                Bamboo Nib Drawing • Handmade Rag Paper
+              </span>
+</div>
+<div class="pt-3 border-t border-border/60">
+<div class="flex items-baseline gap-2 mb-2.5">
+<span class="text-lg font-bold text-primary font-serif">₹550</span>
+<span class="line-through text-text-muted text-xs">₹1,100 retail</span>
+<span class="text-[10px] font-bold text-green-700 bg-green-50 px-1.5 py-0.5 rounded">50% direct saving</span>
+</div>
+<div class="grid grid-cols-2 gap-2">
+<button class="py-2 px-3 rounded bg-primary text-white hover:bg-secondary text-xs font-bold text-center transition-colors" onclick="addToCart('Hand-Painted Coaster Set (4 Pcs)', 550)">
+                  Add to Cart
+                </button>
+<button class="py-2 px-2 rounded border border-border hover:border-primary text-primary text-xs font-semibold text-center transition-colors" onclick="openStoryModal(2)">
+                  Quality &amp; Story
+                </button>
+</div>
+</div>
+</div>
+</article>
+<!-- ITEM 3: ₹650 Kondapalli Dancing Bobble Doll -->
+<article class="product-item bg-white border border-border rounded-xl overflow-hidden flex flex-col craft-shadow" data-cat="toys" data-id="3" data-price="650" data-tag="under-1000 gifts">
+<div class="relative aspect-[4/3] bg-surface-muted overflow-hidden">
+<img alt="Kondapalli Dancing Toy" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDk7AHj76EB05bZCiu16sy7S8CBVMyBktnWJmvpzLeKuqbxUF2ThH4epVHJtTZL_ZDRbZfUvLnOjYCr70lLT420x71BYVfquKaZ8vQ1QErdIiC-sS8_VaEQjGtDIvSxXLwYBuHPPQMEN8PIJ1-y_R9Es95AQZA-_DaBVyhELMx3FYvrn4eu9HvcnlMUARFsPh81gJ9-8Lpe25eIxaGOCIUbhGBTBvuRWTyhuWBgkYxK"/>
+<span class="absolute top-2 left-2 bg-white/95 px-2 py-0.5 rounded text-[10px] font-bold text-secondary-dark border border-border">
+              🪵 Tella Poniki Softwood
+            </span>
+<span class="absolute top-2 right-2 bg-primary text-white text-[10px] font-semibold px-1.5 py-0.5 rounded">
+              Craft: 2 Days
+            </span>
+</div>
+<div class="p-4 flex-1 flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between text-xs text-text-muted mb-1">
+<span class="font-bold text-secondary-dark uppercase text-[10px] tracking-wider">Kondapalli • Andhra Pradesh</span>
+<span class="font-bold text-primary">⭐ 4.8 <span class="text-text-muted text-[10px]">(96)</span></span>
+</div>
+<h4 class="font-serif text-base font-bold text-primary mb-1">Miniature Dancing Bobble Toy</h4>
+<p class="text-xs text-text-muted mb-2">By Master K. Nageswara Rao • Krishna District</p>
+<span class="inline-block px-2 py-0.5 rounded bg-surface-muted text-[10px] text-text-muted mb-3">
+                Non-Toxic Natural Lacquer • Balanced Pivot
+              </span>
+</div>
+<div class="pt-3 border-t border-border/60">
+<div class="flex items-baseline gap-2 mb-2.5">
+<span class="text-lg font-bold text-primary font-serif">₹650</span>
+<span class="line-through text-text-muted text-xs">₹1,300 retail</span>
+<span class="text-[10px] font-bold text-green-700 bg-green-50 px-1.5 py-0.5 rounded">50% direct saving</span>
+</div>
+<div class="grid grid-cols-2 gap-2">
+<button class="py-2 px-3 rounded bg-primary text-white hover:bg-secondary text-xs font-bold text-center transition-colors" onclick="addToCart('Miniature Dancing Bobble Toy', 650)">
+                  Add to Cart
+                </button>
+<button class="py-2 px-2 rounded border border-border hover:border-primary text-primary text-xs font-semibold text-center transition-colors" onclick="openStoryModal(3)">
+                  Quality &amp; Story
+                </button>
+</div>
+</div>
+</div>
+</article>
+<!-- ITEM 4: ₹950 Resonant Bell Brass -->
+<article class="product-item bg-white border border-border rounded-xl overflow-hidden flex flex-col craft-shadow" data-cat="metal" data-id="4" data-price="950" data-tag="under-1000">
+<div class="relative aspect-[4/3] bg-surface-muted overflow-hidden">
+<img alt="Hand-etched Brass Bell" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB52YeJNsF3479Pj3whGo2Yz9pjPXusKmKuR-kfVgQnQiQCdLLT-CIf0Aw-emN7UFveI3dId3bAr5ZsUuqcoeJoMRpF9WoxeDgudqiHpnw8rUuOK6tp0sF9n0Hb0GbOZKoUv0IvYZaPFNjvPvZToMEPOxkM2lKsNqJGOGW943vmbdkQ-MITK-k9BDZi0PAWHHkByGZH0v60GHQ9zwRdvnmqNld9bHD0Fl-W7sVAyb3z"/>
+<span class="absolute top-2 left-2 bg-white/95 px-2 py-0.5 rounded text-[10px] font-bold text-secondary-dark border border-border">
+              🔔 Solid 80/20 Bell Brass
+            </span>
+<span class="absolute top-2 right-2 bg-primary text-white text-[10px] font-semibold px-1.5 py-0.5 rounded">
+              Craft: 3 Days
+            </span>
+</div>
+<div class="p-4 flex-1 flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between text-xs text-text-muted mb-1">
+<span class="font-bold text-secondary-dark uppercase text-[10px] tracking-wider">Brassware • Moradabad</span>
+<span class="font-bold text-primary">⭐ 4.9 <span class="text-text-muted text-[10px]">(134)</span></span>
+</div>
+<h4 class="font-serif text-base font-bold text-primary mb-1">Hand-Etched Acoustic Temple Bell</h4>
+<p class="text-xs text-text-muted mb-2">By Ustad Farooq Ahmed • Moradabad Guild</p>
+<span class="inline-block px-2 py-0.5 rounded bg-surface-muted text-[10px] text-text-muted mb-3">
+                Lathe-Tuned Acoustic Tone • Lotus Chiseling
+              </span>
+</div>
+<div class="pt-3 border-t border-border/60">
+<div class="flex items-baseline gap-2 mb-2.5">
+<span class="text-lg font-bold text-primary font-serif">₹950</span>
+<span class="line-through text-text-muted text-xs">₹1,900 retail</span>
+<span class="text-[10px] font-bold text-green-700 bg-green-50 px-1.5 py-0.5 rounded">50% direct saving</span>
+</div>
+<div class="grid grid-cols-2 gap-2">
+<button class="py-2 px-3 rounded bg-primary text-white hover:bg-secondary text-xs font-bold text-center transition-colors" onclick="addToCart('Hand-Etched Acoustic Temple Bell', 950)">
+                  Add to Cart
+                </button>
+<button class="py-2 px-2 rounded border border-border hover:border-primary text-primary text-xs font-semibold text-center transition-colors" onclick="openStoryModal(4)">
+                  Quality &amp; Story
+                </button>
+</div>
+</div>
+</div>
+</article>
+<!-- ITEM 5: ₹1,200 Jaipur Blue Pottery Tea Mug Pair -->
+<article class="product-item bg-white border border-border rounded-xl overflow-hidden flex flex-col craft-shadow" data-cat="pottery" data-id="5" data-price="1200" data-tag="1000-2000">
+<div class="relative aspect-[4/3] bg-surface-muted overflow-hidden">
+<img alt="Jaipur Blue Pottery Mug Pair" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBW5r11OtlZxXZSSx788Lh0uKG_WN-lBmxpqP-G7W2EoNM8oVBXHFJYGbmWAlO2zOZEWCPG3DXFGGjV03GfnK-hXu_aJpHclLdwOOayN_381dW16l52UR7jFUYysl6wmRpMAgb4LwS1brCp_lMjeh_z-dbQ6PUP3uNNhag0VxWYc50P8ZCuGChB-2jE-5EOPXIgKPAdbeKftMsEc-uPcdG6yNt3ilqMdUjSa6X1Yiw7"/>
+<span class="absolute top-2 left-2 bg-white/95 px-2 py-0.5 rounded text-[10px] font-bold text-secondary-dark border border-border">
+              ☕ Food-Grade Lead-Free Glaze
+            </span>
+<span class="absolute top-2 right-2 bg-primary text-white text-[10px] font-semibold px-1.5 py-0.5 rounded">
+              Craft: 4 Days
+            </span>
+</div>
+<div class="p-4 flex-1 flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between text-xs text-text-muted mb-1">
+<span class="font-bold text-secondary-dark uppercase text-[10px] tracking-wider">Blue Pottery • Jaipur</span>
+<span class="font-bold text-primary">⭐ 4.9 <span class="text-text-muted text-[10px]">(158)</span></span>
+</div>
+<h4 class="font-serif text-base font-bold text-primary mb-1">Blue Pottery Tea Mug Set (Pair)</h4>
+<p class="text-xs text-text-muted mb-2">By Kripal Kumbh Heritage Atelier • Jaipur</p>
+<span class="inline-block px-2 py-0.5 rounded bg-surface-muted text-[10px] text-text-muted mb-3">
+                Quartz Powder Base (No Clay) • Cobalt Blue
+              </span>
+</div>
+<div class="pt-3 border-t border-border/60">
+<div class="flex items-baseline gap-2 mb-2.5">
+<span class="text-lg font-bold text-primary font-serif">₹1,200</span>
+<span class="line-through text-text-muted text-xs">₹2,400 retail</span>
+<span class="text-[10px] font-bold text-green-700 bg-green-50 px-1.5 py-0.5 rounded">50% direct saving</span>
+</div>
+<div class="grid grid-cols-2 gap-2">
+<button class="py-2 px-3 rounded bg-primary text-white hover:bg-secondary text-xs font-bold text-center transition-colors" onclick="addToCart('Blue Pottery Tea Mug Set (Pair)', 1200)">
+                  Add to Cart
+                </button>
+<button class="py-2 px-2 rounded border border-border hover:border-primary text-primary text-xs font-semibold text-center transition-colors" onclick="openStoryModal(5)">
+                  Quality &amp; Story
+                </button>
+</div>
+</div>
+</div>
+</article>
+<!-- ITEM 6: ₹1,450 Handwoven Pochampally Ikat Silk-Cotton Stole -->
+<article class="product-item bg-white border border-border rounded-xl overflow-hidden flex flex-col craft-shadow" data-cat="textiles" data-id="6" data-price="1450" data-tag="1000-2000">
+<div class="relative aspect-[4/3] bg-surface-muted overflow-hidden">
+<img alt="Pochampally Ikat Stole" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDFkW-ZZME1SLwCNBqi-g-X0MG-skzIyTj73IfYZmncVw6HtBTSziGspiIt-ojX9H2leGkBMS7a1s3XLunj01_rUNAGJqtkRGICDQZE7dJ_K_dD5q_RAVxVX-PX8ELAJ2IDi4xn-zMbvnx8q1w2DHZXSLQCE8lJonv1Pdd-yXBG5gcM6md70ynlHJa-pdoMo4MvtvoQ6a29EfHLPcpDrltRgqevYFJp-V3XXUX1jyZd"/>
+<span class="absolute top-2 left-2 bg-white/95 px-2 py-0.5 rounded text-[10px] font-bold text-secondary-dark border border-border">
+              🧵 Handloom Pit Loom Weave
+            </span>
+<span class="absolute top-2 right-2 bg-primary text-white text-[10px] font-semibold px-1.5 py-0.5 rounded">
+              Craft: 5 Days
+            </span>
+</div>
+<div class="p-4 flex-1 flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between text-xs text-text-muted mb-1">
+<span class="font-bold text-secondary-dark uppercase text-[10px] tracking-wider">Ikat Weaves • Telangana</span>
+<span class="font-bold text-primary">⭐ 5.0 <span class="text-text-muted text-[10px]">(78)</span></span>
+</div>
+<h4 class="font-serif text-base font-bold text-primary mb-1">Handwoven Ikat Silk-Cotton Stole</h4>
+<p class="text-xs text-text-muted mb-2">By Bhoodan Weavers Cooperative • Pochampally</p>
+<span class="inline-block px-2 py-0.5 rounded bg-surface-muted text-[10px] text-text-muted mb-3">
+                Double Ikat Resist Dye • Pure Mulberry Softness
+              </span>
+</div>
+<div class="pt-3 border-t border-border/60">
+<div class="flex items-baseline gap-2 mb-2.5">
+<span class="text-lg font-bold text-primary font-serif">₹1,450</span>
+<span class="line-through text-text-muted text-xs">₹2,900 retail</span>
+<span class="text-[10px] font-bold text-green-700 bg-green-50 px-1.5 py-0.5 rounded">50% direct saving</span>
+</div>
+<div class="grid grid-cols-2 gap-2">
+<button class="py-2 px-3 rounded bg-primary text-white hover:bg-secondary text-xs font-bold text-center transition-colors" onclick="addToCart('Handwoven Ikat Silk-Cotton Stole', 1450)">
+                  Add to Cart
+                </button>
+<button class="py-2 px-2 rounded border border-border hover:border-primary text-primary text-xs font-semibold text-center transition-colors" onclick="openStoryModal(6)">
+                  Quality &amp; Story
+                </button>
+</div>
+</div>
+</div>
+</article>
+<!-- ITEM 7: ₹1,850 Cheriyal Folk Narrative Wall Mask -->
+<article class="product-item bg-white border border-border rounded-xl overflow-hidden flex flex-col craft-shadow" data-cat="paintings" data-id="7" data-price="1850" data-tag="1000-2000">
+<div class="relative aspect-[4/3] bg-surface-muted overflow-hidden">
+<img alt="Cheriyal Folk Mask" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDzhdHKdszmUYBxIjxg_Fzd-1uw-NRbW3jJG4NMVOnGxppR6u5NY0R21wzDB9pLozmbXJORK8UI5j5olvrGCc0elXCxGZNoxQZAYLptx67Bb2O_1TBAr7UYw34FHmzVRni-2N4faZfBHGU6kqWHuOy9A9NIIM2pSRUoCizofe-q1h-KGWswBev_eZ3HS3g0j0YI_A5mKBLRW8PdWTNdwc4VujDTQbOLOFKyn8CjNjsM"/>
+<span class="absolute top-2 left-2 bg-white/95 px-2 py-0.5 rounded text-[10px] font-bold text-secondary-dark border border-border">
+              🎭 Teak Sawdust &amp; Tamarind
+            </span>
+<span class="absolute top-2 right-2 bg-primary text-white text-[10px] font-semibold px-1.5 py-0.5 rounded">
+              Craft: 6 Days
+            </span>
+</div>
+<div class="p-4 flex-1 flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between text-xs text-text-muted mb-1">
+<span class="font-bold text-secondary-dark uppercase text-[10px] tracking-wider">Cheriyal • Telangana</span>
+<span class="font-bold text-primary">⭐ 4.9 <span class="text-text-muted text-[10px]">(62)</span></span>
+</div>
+<h4 class="font-serif text-base font-bold text-primary mb-1">Cheriyal Folk Narrative Wall Mask</h4>
+<p class="text-xs text-text-muted mb-2">By Master D. Vaikuntam • Cheriyal Guild</p>
+<span class="inline-block px-2 py-0.5 rounded bg-surface-muted text-[10px] text-text-muted mb-3">
+                Mineral White Pigment • Natural Gum Binding
+              </span>
+</div>
+<div class="pt-3 border-t border-border/60">
+<div class="flex items-baseline gap-2 mb-2.5">
+<span class="text-lg font-bold text-primary font-serif">₹1,850</span>
+<span class="line-through text-text-muted text-xs">₹3,700 retail</span>
+<span class="text-[10px] font-bold text-green-700 bg-green-50 px-1.5 py-0.5 rounded">50% direct saving</span>
+</div>
+<div class="grid grid-cols-2 gap-2">
+<button class="py-2 px-3 rounded bg-primary text-white hover:bg-secondary text-xs font-bold text-center transition-colors" onclick="addToCart('Cheriyal Folk Narrative Wall Mask', 1850)">
+                  Add to Cart
+                </button>
+<button class="py-2 px-2 rounded border border-border hover:border-primary text-primary text-xs font-semibold text-center transition-colors" onclick="openStoryModal(7)">
+                  Quality &amp; Story
+                </button>
+</div>
+</div>
+</div>
+</article>
+<!-- ITEM 8: ₹2,200 Hand-Carved Sheesham Keepsake Box -->
+<article class="product-item bg-white border border-border rounded-xl overflow-hidden flex flex-col craft-shadow" data-cat="toys" data-id="8" data-price="2200" data-tag="2000-3500">
+<div class="relative aspect-[4/3] bg-surface-muted overflow-hidden">
+<img alt="Sheesham Wood Carved Box" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD4PtlIc52rHLy1uoC1bPPYjqZWHYg7pWyAyW2OgDCHEjYpH32dyoySaxER_eTC_QY_1lt6B7FH2LcJ14zKNy4Zi7dopBLhtMzBpYfmCf2M6wYTsy_j-M1ipURUX0Bwfmy2rQaB5V3ABIUnSQSzRzNvEkkuyQJy9vTX2ie4dFrjljXCyHL2-RQBY8RDIH5jbhgxGSuGd95ufp553ef14O4ZikEwzrqzeqt8YAxmkoMz"/>
+<span class="absolute top-2 left-2 bg-white/95 px-2 py-0.5 rounded text-[10px] font-bold text-secondary-dark border border-border">
+              🌳 Solid Certified Rosewood
+            </span>
+<span class="absolute top-2 right-2 bg-primary text-white text-[10px] font-semibold px-1.5 py-0.5 rounded">
+              Craft: 4 Days
+            </span>
+</div>
+<div class="p-4 flex-1 flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between text-xs text-text-muted mb-1">
+<span class="font-bold text-secondary-dark uppercase text-[10px] tracking-wider">Wood Carving • Saharanpur</span>
+<span class="font-bold text-primary">⭐ 4.9 <span class="text-text-muted text-[10px]">(145)</span></span>
+</div>
+<h4 class="font-serif text-base font-bold text-primary mb-1">Jaali Filigree Carved Keepsake Box</h4>
+<p class="text-xs text-text-muted mb-2">By Master Irfan Ansari • Saharanpur</p>
+<span class="inline-block px-2 py-0.5 rounded bg-surface-muted text-[10px] text-text-muted mb-3">
+                Beeswax Hand Polish • Intricate Lattice
+              </span>
+</div>
+<div class="pt-3 border-t border-border/60">
+<div class="flex items-baseline gap-2 mb-2.5">
+<span class="text-lg font-bold text-primary font-serif">₹2,200</span>
+<span class="line-through text-text-muted text-xs">₹4,400 retail</span>
+<span class="text-[10px] font-bold text-green-700 bg-green-50 px-1.5 py-0.5 rounded">50% direct saving</span>
+</div>
+<div class="grid grid-cols-2 gap-2">
+<button class="py-2 px-3 rounded bg-primary text-white hover:bg-secondary text-xs font-bold text-center transition-colors" onclick="addToCart('Jaali Filigree Carved Keepsake Box', 2200)">
+                  Add to Cart
+                </button>
+<button class="py-2 px-2 rounded border border-border hover:border-primary text-primary text-xs font-semibold text-center transition-colors" onclick="openStoryModal(8)">
+                  Quality &amp; Story
+                </button>
+</div>
+</div>
+</div>
+</article>
+<!-- ITEM 9: ₹2,850 Madhubani 'Surya & Fish' Wall Art -->
+<article class="product-item bg-white border border-border rounded-xl overflow-hidden flex flex-col craft-shadow" data-cat="paintings" data-id="9" data-price="2850" data-tag="2000-3500">
+<div class="relative aspect-[4/3] bg-surface-muted overflow-hidden">
+<img alt="Madhubani Surya Painting" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCQloTU6n-Ogz1D4JwtRX9sLwSzRSP4_ETOe_92LPLCfZM-QkvRw1eqnZQyu7qiFvH_fRAaokg84Ang8YHndo2uc3lq7yyU0AgjQINGrKobybUEhZS81FLJqonUkoGvpcsb5yTSgEMRJDNNBHhu75unluxiv0gBPUI78REMnpwh8DwKTfO0yTcBb_CAsGL2iTxs9LjxujNIvdo7cNJdU4n_3x_k49HOvO1riLY3DV02"/>
+<span class="absolute top-2 left-2 bg-white/95 px-2 py-0.5 rounded text-[10px] font-bold text-secondary-dark border border-border">
+              ☀️ Mithila GI Certified
+            </span>
+<span class="absolute top-2 right-2 bg-primary text-white text-[10px] font-semibold px-1.5 py-0.5 rounded">
+              Craft: 7 Days
+            </span>
+</div>
+<div class="p-4 flex-1 flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between text-xs text-text-muted mb-1">
+<span class="font-bold text-secondary-dark uppercase text-[10px] tracking-wider">Madhubani • Bihar</span>
+<span class="font-bold text-primary">⭐ 5.0 <span class="text-text-muted text-[10px]">(89)</span></span>
+</div>
+<h4 class="font-serif text-base font-bold text-primary mb-1">Surya Deva Celestial Folk Canvas</h4>
+<p class="text-xs text-text-muted mb-2">By Smt. Ganga Devi Clan • Ranti Village</p>
+<span class="inline-block px-2 py-0.5 rounded bg-surface-muted text-[10px] text-text-muted mb-3">
+                Double Needle-Line Art • Lampblack &amp; Madder
+              </span>
+</div>
+<div class="pt-3 border-t border-border/60">
+<div class="flex items-baseline gap-2 mb-2.5">
+<span class="text-lg font-bold text-primary font-serif">₹2,850</span>
+<span class="line-through text-text-muted text-xs">₹5,700 retail</span>
+<span class="text-[10px] font-bold text-green-700 bg-green-50 px-1.5 py-0.5 rounded">50% direct saving</span>
+</div>
+<div class="grid grid-cols-2 gap-2">
+<button class="py-2 px-3 rounded bg-primary text-white hover:bg-secondary text-xs font-bold text-center transition-colors" onclick="addToCart('Surya Deva Celestial Folk Canvas', 2850)">
+                  Add to Cart
+                </button>
+<button class="py-2 px-2 rounded border border-border hover:border-primary text-primary text-xs font-semibold text-center transition-colors" onclick="openStoryModal(9)">
+                  Quality &amp; Story
+                </button>
+</div>
+</div>
+</div>
+</article>
+<!-- ITEM 10: ₹3,200 Master Devendra's Srikalahasti Kalamkari 'Tree of Life' -->
+<article class="product-item bg-white border border-border rounded-xl overflow-hidden flex flex-col craft-shadow" data-cat="paintings" data-id="10" data-price="3200" data-tag="2000-3500">
+<div class="relative aspect-[4/3] bg-surface-muted overflow-hidden">
+<img alt="Tree of Life Kalamkari Scroll" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDV7GYPPT8Qns4GIurHsU8OBywdun1if4E14PEXL8Acdd6tNjyF6uDZ209-zTl4P5GkCYaxh5dXbV_HeM_KiKml5-CDB3fg7tJUOXwbhPk4hCEhO6EGiF1OBNIUalroy8kFS5TcILSKhGsrd4CodMdgz7BQyilVeyjAHGgIScvvEFIG7LpY7mK_KsL7RZ21yyt_eH1qTKUOu5Fr9p-K1nWmP0b_JAI3E18gTN0xfoff"/>
+<span class="absolute top-2 left-2 bg-white/95 px-2 py-0.5 rounded text-[10px] font-bold text-secondary-dark border border-border">
+              🌳 Fermented Indigo &amp; Khadi
+            </span>
+<span class="absolute top-2 right-2 bg-primary text-white text-[10px] font-semibold px-1.5 py-0.5 rounded">
+              Craft: 10 Days
+            </span>
+</div>
+<div class="p-4 flex-1 flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between text-xs text-text-muted mb-1">
+<span class="font-bold text-secondary-dark uppercase text-[10px] tracking-wider">Kalamkari • Andhra Pradesh</span>
+<span class="font-bold text-primary">⭐ 5.0 <span class="text-text-muted text-[10px]">(192)</span></span>
+</div>
+<h4 class="font-serif text-base font-bold text-primary mb-1">Tree of Life Hand-Drawn Scroll</h4>
+<p class="text-xs text-text-muted mb-2">By Master Devendra Chitrakar (7th Gen)</p>
+<span class="inline-block px-2 py-0.5 rounded bg-surface-muted text-[10px] text-text-muted mb-3">
+                Bamboo Kalam Pen • Swarnamukhi River Rinsed
+              </span>
+</div>
+<div class="pt-3 border-t border-border/60">
+<div class="flex items-baseline gap-2 mb-2.5">
+<span class="text-lg font-bold text-primary font-serif">₹3,200</span>
+<span class="line-through text-text-muted text-xs">₹6,800 retail</span>
+<span class="text-[10px] font-bold text-green-700 bg-green-50 px-1.5 py-0.5 rounded">53% direct saving</span>
+</div>
+<div class="grid grid-cols-2 gap-2">
+<button class="py-2 px-3 rounded bg-primary text-white hover:bg-secondary text-xs font-bold text-center transition-colors" onclick="addToCart('Tree of Life Hand-Drawn Scroll', 3200)">
+                  Add to Cart
+                </button>
+<button class="py-2 px-2 rounded border border-border hover:border-primary text-primary text-xs font-semibold text-center transition-colors" onclick="openStoryModal(10)">
+                  Quality &amp; Story
+                </button>
+</div>
+</div>
+</div>
+</article>
+</div>
+<!-- Living Heritage Custodian Feature -->
+<!-- CUSTOMER PHOTO REVIEWS & UNBOXING STORIES -->
+<div class="mb-16 border-t border-border/60 pt-10">
+<!-- Header & Trust Stat -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6">
+<div>
+<div class="inline-flex items-center gap-1.5 px-3 py-1 rounded bg-secondary-light border border-secondary/30 text-secondary-dark text-[11px] font-bold uppercase tracking-wider mb-2.5">
+<span class="material-symbols-outlined text-[15px]">verified</span>
+<span>Authentic Community Proof</span>
+</div>
+<h3 class="font-serif text-2xl sm:text-3xl font-bold text-primary mb-1.5 leading-tight">
+        Real Homes, Genuine Craft — Customer Unboxing &amp; Photo Reviews
+      </h3>
+<p class="text-xs sm:text-sm text-text-muted">
+        Verified buyers sharing authentic photos of their handmade treasures in daily life. Zero studio mockups.
+      </p>
+</div>
+<div class="shrink-0 bg-white border border-border rounded-xl px-4 py-2.5 shadow-sm flex items-center gap-2.5">
+<span class="text-xl">⭐</span>
+<div>
+<p class="text-xs font-bold text-primary">4.9/5 from 2,400+ Verified Buyers</p>
+<p class="text-[10px] text-green-700 font-semibold flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]">eco</span>
+<span>100% Damage-Free Eco-Packaging Guarantee</span>
+</p>
+</div>
+</div>
+</div>
+<!-- Interactive Filter Tabs -->
+<div class="flex items-center gap-2 overflow-x-auto pb-2 mb-6 custom-scroll text-xs">
+<button class="px-3.5 py-1.5 rounded-full font-semibold bg-primary text-white whitespace-nowrap transition-colors">
+      All Reviews (2,430+)
+    </button>
+<button class="px-3.5 py-1.5 rounded-full font-semibold bg-secondary-light border border-secondary/40 text-secondary-dark whitespace-nowrap flex items-center gap-1 transition-colors">
+<span class="material-symbols-outlined text-[15px]">photo_camera</span>
+<span>With Customer Photos (840)</span>
+</button>
+<button class="px-3.5 py-1.5 rounded-full font-semibold bg-white border border-border text-text-muted hover:text-primary whitespace-nowrap transition-colors">
+      Unboxing Videos &amp; Reels
+    </button>
+<button class="px-3.5 py-1.5 rounded-full font-semibold bg-white border border-border text-text-muted hover:text-primary whitespace-nowrap transition-colors">
+      Ceramics &amp; Decor
+    </button>
+<button class="px-3.5 py-1.5 rounded-full font-semibold bg-white border border-border text-text-muted hover:text-primary whitespace-nowrap transition-colors">
+      Folk Paintings
+    </button>
+</div>
+<!-- 4-Column Photo Review Cards Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+<!-- CARD 1: Terracotta / Pottery Tea Set -->
+<div class="bg-white border border-border rounded-xl overflow-hidden craft-shadow flex flex-col">
+<div class="relative aspect-[4/3] bg-surface-muted overflow-hidden">
+<img alt="Real authentic customer unboxing photo of handcrafted terracotta tea mug set" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAv6bxCO9Z74eRcsqUgp8Fz2XZzQuqXmpTKL-ixuzNRRovxAfyX163gVDVUOY8QJu5mM8T0Y3NOYssWWLYpt4-nKvhMSv8sVrmcuzEB1Xv_w7BCnj6E0K0BS9THSmZsTf2RGuKk8n86iJ_FQVJ2hR5b3B26zY_zNQTrQEf5SgCR978R8QJ95gWcnTZ9SfWEggh4ifDqr0YkNzY4f7C-lOvV5A65gBclueE3G77a_P7A"/>
+<span class="absolute top-2 left-2 bg-white/95 backdrop-blur-xs px-2 py-0.5 rounded text-[10px] font-bold text-secondary-dark border border-border flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px]">verified</span>
+<span>GI Certified Cluster</span>
+</span>
+<span class="absolute bottom-2 right-2 bg-black/60 backdrop-blur-xs text-white px-2 py-0.5 rounded text-[10px] font-medium">
+          📦 Delivered in 4 days
+        </span>
+</div>
+<div class="p-4 flex-1 flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-1.5">
+<div class="text-secondary text-xs tracking-wider">⭐⭐⭐⭐⭐</div>
+<span class="text-[10px] bg-green-50 text-green-700 font-bold px-1.5 py-0.2 rounded border border-green-200">Verified Buyer</span>
+</div>
+<h4 class="font-bold text-xs text-primary">Pooja &amp; Rohan M., Bengaluru</h4>
+<p class="text-[11px] text-text-muted mb-2.5">Purchased: Jaipur Pottery Tea Set</p>
+<p class="text-xs text-text-muted italic leading-relaxed mb-3">
+            "The tea tastes noticeably better! Unboxing felt so personal with the artisan handwritten note and sustainable straw cushion packing. Cannot believe this was only ₹1,200."
+          </p>
+</div>
+<div class="pt-2.5 border-t border-border/60 flex items-center justify-between text-[11px] text-text-muted">
+<span class="flex items-center gap-1 text-secondary-dark font-medium">
+<span class="material-symbols-outlined text-[14px]">inventory_2</span>
+<span>Eco Unboxing</span>
+</span>
+<span class="text-[10px]">2 days ago</span>
+</div>
+</div>
+</div>
+<!-- CARD 2: Madhubani Canvas -->
+<div class="bg-white border border-border rounded-xl overflow-hidden craft-shadow flex flex-col">
+<div class="relative aspect-[4/3] bg-surface-muted overflow-hidden">
+<img alt="Customer review unboxing photo of Madhubani art canvas on living room wall" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCxodHOLojO4Z2tzgC3g9RETSZpLF1JAYBwZUIwOIhzqNTgajwvNlmD6wbTxj4DhtNmsftGRjGaoW_hcV8sYAJsEjwCPMhfFkDFudVjiOHn---SJUGyc5ZvkiPySzuYPXLpelufdiiRHzY4dF7_qbPMbKRuNXuFVfUp0im30xeWzCummvOck8arVIqktoWSD5syYhdgsiIw4AN1X8pTegCMXsk9RHD_DLnNb2EvO_rx"/>
+<span class="absolute top-2 left-2 bg-white/95 backdrop-blur-xs px-2 py-0.5 rounded text-[10px] font-bold text-secondary-dark border border-border flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px]">verified</span>
+<span>GI Certified Seal</span>
+</span>
+<span class="absolute bottom-2 right-2 bg-black/60 backdrop-blur-xs text-white px-2 py-0.5 rounded text-[10px] font-medium">
+          📦 Cylinder Tube Box
+        </span>
+</div>
+<div class="p-4 flex-1 flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-1.5">
+<div class="text-secondary text-xs tracking-wider">⭐⭐⭐⭐⭐</div>
+<span class="text-[10px] bg-green-50 text-green-700 font-bold px-1.5 py-0.2 rounded border border-green-200">Verified Buyer</span>
+</div>
+<h4 class="font-bold text-xs text-primary">Ananya Deshmukh, Pune</h4>
+<p class="text-[11px] text-text-muted mb-2.5">Purchased: Surya Deva Madhubani Canvas</p>
+<p class="text-xs text-text-muted italic leading-relaxed mb-3">
+            "Hung it up right after opening the sturdy cylinder box! You can clearly smell the natural neem and turmeric pigments. Guests constantly compliment it. Pure heirloom quality at ₹2,850."
+          </p>
+</div>
+<div class="pt-2.5 border-t border-border/60 flex items-center justify-between text-[11px] text-text-muted">
+<span class="flex items-center gap-1 text-secondary-dark font-medium">
+<span class="material-symbols-outlined text-[14px]">palette</span>
+<span>Natural Pigments</span>
+</span>
+<span class="text-[10px]">5 days ago</span>
+</div>
+</div>
+</div>
+<!-- CARD 3: Carved Keepsake Box -->
+<div class="bg-white border border-border rounded-xl overflow-hidden craft-shadow flex flex-col">
+<div class="relative aspect-[4/3] bg-surface-muted overflow-hidden">
+<img alt="Customer hands opening craft packaging box with wooden keepsake jewelry box" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAVEOShM8Dzkkp0pnMSbNPQuFPuFCpEiy-L2rtGpVQINZSF9XI1S8p7iaeO5tf1MTVd7i0ch9lqkxoGjEdp8QpEe8PKeIK-jjZhrBKu5-vGo4NhXn7MvYJhi7OGbmIj4sGX-R8sRayAUt_mAlka8gCRIx9TyXk91ky4SSTYg9lZEh6eAaGs-5P67aD0B-rWW5oKseHcwozTA0iUl8EiSJ84GkeMZoL1u19pXAuDiRE1"/>
+<span class="absolute top-2 left-2 bg-white/95 backdrop-blur-xs px-2 py-0.5 rounded text-[10px] font-bold text-secondary-dark border border-border flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px]">verified</span>
+<span>GI Certified Seal</span>
+</span>
+<span class="absolute bottom-2 right-2 bg-black/60 backdrop-blur-xs text-white px-2 py-0.5 rounded text-[10px] font-medium">
+          📦 Hand-Tied Kraft Pack
+        </span>
+</div>
+<div class="p-4 flex-1 flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-1.5">
+<div class="text-secondary text-xs tracking-wider">⭐⭐⭐⭐⭐</div>
+<span class="text-[10px] bg-green-50 text-green-700 font-bold px-1.5 py-0.2 rounded border border-green-200">Verified Buyer</span>
+</div>
+<h4 class="font-bold text-xs text-primary">Kavita Sundaram, Chennai</h4>
+<p class="text-[11px] text-text-muted mb-2.5">Purchased: Carved Keepsake Box</p>
+<p class="text-xs text-text-muted italic leading-relaxed mb-3">
+            "The unboxing experience was truly heartwarming. Opening the butter paper with the craftsman seal made my birthday gift unforgettable. The brass clasp and sheesham aroma are unmatched."
+          </p>
+</div>
+<div class="pt-2.5 border-t border-border/60 flex items-center justify-between text-[11px] text-text-muted">
+<span class="flex items-center gap-1 text-secondary-dark font-medium">
+<span class="material-symbols-outlined text-[14px]">park</span>
+<span>Pure Sheesham</span>
+</span>
+<span class="text-[10px]">1 week ago</span>
+</div>
+</div>
+</div>
+<!-- CARD 4: Kondapalli Dancing Toy -->
+<div class="bg-white border border-border rounded-xl overflow-hidden craft-shadow flex flex-col">
+<div class="relative aspect-[4/3] bg-surface-muted overflow-hidden">
+<img alt="Customer photo of Kondapalli wooden bobble toy on an office desk" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA4_B_J2IAtlCDA8EzT7vpqahssDaBCAYWo6RorvWlKCko8Lj5ALlUupNcorq10pGqSCkZc-m8cuU0UOBHYusEGtq3oToKcn-sO_kP9CMrCaCBtebLPW9sAnB0P06My1_m9b0AL4Ik-dZ_e8gicHALYhZZXXFj4FTwNyRteC_y9Qjzx8xlkPNQomc12ZTyqip06V69IeEqiKKxkIFPtgkX7JP0g2zz7bCNcT4L1WPdv"/>
+<span class="absolute top-2 left-2 bg-white/95 backdrop-blur-xs px-2 py-0.5 rounded text-[10px] font-bold text-secondary-dark border border-border flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px]">verified</span>
+<span>GI Certified Seal</span>
+</span>
+<span class="absolute bottom-2 right-2 bg-black/60 backdrop-blur-xs text-white px-2 py-0.5 rounded text-[10px] font-medium">
+          📦 Zero-Plastic Box
+        </span>
+</div>
+<div class="p-4 flex-1 flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-1.5">
+<div class="text-secondary text-xs tracking-wider">⭐⭐⭐⭐⭐</div>
+<span class="text-[10px] bg-green-50 text-green-700 font-bold px-1.5 py-0.2 rounded border border-green-200">Verified Buyer</span>
+</div>
+<h4 class="font-bold text-xs text-primary">Vikramaditya S., Gurgaon</h4>
+<p class="text-[11px] text-text-muted mb-2.5">Purchased: Kondapalli Dancing Toy</p>
+<p class="text-xs text-text-muted italic leading-relaxed mb-3">
+            "Brought this for my work desk. The traditional bobble movement brings a smile to everyone in Zoom meetings! Vibrant non-toxic lacquer finish. Direct support to Krishna cluster."
+          </p>
+</div>
+<div class="pt-2.5 border-t border-border/60 flex items-center justify-between text-[11px] text-text-muted">
+<span class="flex items-center gap-1 text-secondary-dark font-medium">
+<span class="material-symbols-outlined text-[14px]">toys</span>
+<span>Natural Lacquer</span>
+</span>
+<span class="text-[10px]">2 weeks ago</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Trust Callout & Incentivized Submission Banner -->
+<div class="bg-secondary-light/40 border border-secondary/30 rounded-xl p-4 sm:p-5 flex flex-col sm:flex-row items-center justify-between gap-4">
+<div class="flex items-center gap-3.5">
+<div class="w-10 h-10 rounded-full bg-secondary-light text-secondary-dark border border-secondary/40 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[20px]">loyalty</span>
+</div>
+<div>
+<h5 class="text-xs sm:text-sm font-bold text-primary mb-0.5">
+          Upload Your Unboxing Story &amp; Get ₹200 Guild Credits toward your next handcrafted heirloom
+        </h5>
+<p class="text-[11px] text-text-muted">
+          Show fellow craft lovers how authentic artisan pieces look inside your living space.
+        </p>
+</div>
+</div>
+<button class="px-4 py-2 bg-primary hover:bg-secondary text-white text-xs font-bold rounded-lg shadow-sm transition-colors whitespace-nowrap shrink-0 flex items-center gap-1.5" onclick="alert('Upload Unboxing Photo &amp; Story Modal: Select order ID, attach unboxing photos, and receive ₹200 wallet credit instantly upon verification!')">
+<span class="material-symbols-outlined text-[15px]">add_a_photo</span>
+<span>Submit Photo Review</span>
+</button>
+</div>
+</div><div class="bg-surface-muted border border-border rounded-xl p-6 sm:p-8 flex flex-col md:flex-row items-center gap-6">
+<div class="w-28 h-28 sm:w-36 sm:h-36 rounded-xl overflow-hidden border-2 border-secondary shrink-0">
+<img alt="Master Devendra Chitrakar" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCYos-D0d3ZIm9UNaC2BzSayEtQDB_dog0RHdhbLEmHaxaueROgH2-FOUXqM9h9_5mtfzno-wIAmS_47L6_mXJWv7eJp4WE5VrV9dzJFDFs1u72AOZJSg5yRIl8Fn0ITlZ_wqTDSmlJue3PQkFFRVKB__L6q6eArRxWcDfwmGqfi0DhDVKtVKHzM4LJVoJgNGEShGJemb6DaVJD_ETmf7puHBY_2X0zb3pa6rAaKrlB"/>
+</div>
+<div class="flex-1">
+<span class="text-xs font-bold text-secondary-dark uppercase tracking-wider">Meet the Master Artisan</span>
+<h3 class="font-serif text-xl sm:text-2xl font-bold text-primary mt-0.5 mb-1">Master Devendra Chitrakar</h3>
+<p class="text-xs text-text-muted mb-3">7th Generation Srikalahasti Natural Dye Master • Andhra Pradesh</p>
+<p class="text-xs sm:text-sm text-text-muted leading-relaxed mb-4">
+            "When art is sold through normal shops, middlemen take more than half of what you pay. By connecting directly with you on HeritageConnect, our village workshop earns enough to sustain 19 apprentice families, while keeping our 182-year Kalamkari craft affordable for everyone."
+          </p>
+<div class="flex items-center gap-3">
+<button class="px-4 py-2 rounded bg-primary text-white text-xs font-bold hover:bg-secondary transition-colors" onclick="showScreen('screen-artisan')">
+              Read His Full Story &amp; Lineage
+            </button>
+<button class="px-4 py-2 rounded border border-border bg-white text-primary text-xs font-semibold hover:border-primary transition-colors" onclick="openStoryModal(10)">
+              Inspect His Scroll (₹3,200)
+            </button>
+</div>
+</div>
+</div>
+</section>
+<!-- --------------------------------------------------------------------- -->
+<!-- VIEW C: 8 CRAFT TRADITIONS                                            -->
+<!-- --------------------------------------------------------------------- -->
+<section class="hidden py-6" id="screen-lineages">
+<div class="max-w-3xl mb-8">
+<span class="text-xs font-bold text-secondary-dark uppercase tracking-wider block mb-1">Preserving Intangible Heritage</span>
+<h2 class="font-serif text-3xl font-bold text-primary mb-2">Explore 8 Living Craft Traditions</h2>
+<p class="text-sm text-text-muted">
+          Each craft tradition is legally registered with a Geographical Indication (GI) tag, guaranteeing that it is genuinely produced in its historic homeland using traditional artisan methods.
+        </p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+<!-- 1. Kalamkari -->
+<div class="bg-white border border-border rounded-xl p-5 craft-shadow flex flex-col justify-between">
+<div>
+<span class="px-2 py-0.5 rounded bg-secondary-light text-secondary-dark text-[10px] font-bold">Andhra Pradesh</span>
+<h3 class="font-serif text-lg font-bold text-primary mt-2">Kalamkari</h3>
+<p class="text-xs text-secondary-dark font-medium mb-2">Bamboo Quill &amp; Vegetable Dyes</p>
+<p class="text-xs text-text-muted leading-relaxed">Temple cloth art created using buffalo milk pre-treatment, fermented iron, and wild madder root.</p>
+</div>
+<div class="pt-4 mt-4 border-t border-border flex items-center justify-between">
+<span class="text-xs font-bold text-primary">From ₹3,200</span>
+<button class="text-xs text-secondary-dark font-bold hover:underline" onclick="filterByBudgetTag('paintings'); showScreen('screen-home')">View Crafts →</button>
+</div>
+</div>
+<!-- 2. Madhubani -->
+<div class="bg-white border border-border rounded-xl p-5 craft-shadow flex flex-col justify-between">
+<div>
+<span class="px-2 py-0.5 rounded bg-secondary-light text-secondary-dark text-[10px] font-bold">Bihar (Mithila)</span>
+<h3 class="font-serif text-lg font-bold text-primary mt-2">Madhubani</h3>
+<p class="text-xs text-secondary-dark font-medium mb-2">Folk Inking with Twigs</p>
+<p class="text-xs text-text-muted leading-relaxed">Fine double-line geometric storytelling art traditionally painted on festival walls and now on handmade paper.</p>
+</div>
+<div class="pt-4 mt-4 border-t border-border flex items-center justify-between">
+<span class="text-xs font-bold text-primary">From ₹550</span>
+<button class="text-xs text-secondary-dark font-bold hover:underline" onclick="filterByBudgetTag('paintings'); showScreen('screen-home')">View Crafts →</button>
+</div>
+</div>
+<!-- 3. Kondapalli Toys -->
+<div class="bg-white border border-border rounded-xl p-5 craft-shadow flex flex-col justify-between">
+<div>
+<span class="px-2 py-0.5 rounded bg-secondary-light text-secondary-dark text-[10px] font-bold">Andhra Pradesh</span>
+<h3 class="font-serif text-lg font-bold text-primary mt-2">Kondapalli Toys</h3>
+<p class="text-xs text-secondary-dark font-medium mb-2">Softwood Carved Figures</p>
+<p class="text-xs text-text-muted leading-relaxed">Sculpted from local lightweight Tella Poniki softwood and smoothed with tamarind seed paste.</p>
+</div>
+<div class="pt-4 mt-4 border-t border-border flex items-center justify-between">
+<span class="text-xs font-bold text-primary">From ₹650</span>
+<button class="text-xs text-secondary-dark font-bold hover:underline" onclick="filterByBudgetTag('toys'); showScreen('screen-home')">View Crafts →</button>
+</div>
+</div>
+<!-- 4. Jaipur Blue Pottery -->
+<div class="bg-white border border-border rounded-xl p-5 craft-shadow flex flex-col justify-between">
+<div>
+<span class="px-2 py-0.5 rounded bg-secondary-light text-secondary-dark text-[10px] font-bold">Rajasthan</span>
+<h3 class="font-serif text-lg font-bold text-primary mt-2">Blue Pottery</h3>
+<p class="text-xs text-secondary-dark font-medium mb-2">Clay-Free Quartz Glaze</p>
+<p class="text-xs text-text-muted leading-relaxed">Made without clay using ground quartz stone, glass, and cobalt oxide. Brilliant Persian turquoise tone.</p>
+</div>
+<div class="pt-4 mt-4 border-t border-border flex items-center justify-between">
+<span class="text-xs font-bold text-primary">From ₹1,200</span>
+<button class="text-xs text-secondary-dark font-bold hover:underline" onclick="filterByBudgetTag('pottery'); showScreen('screen-home')">View Crafts →</button>
+</div>
+</div>
+<!-- 5. Pochampally Ikat -->
+<div class="bg-white border border-border rounded-xl p-5 craft-shadow flex flex-col justify-between">
+<div>
+<span class="px-2 py-0.5 rounded bg-secondary-light text-secondary-dark text-[10px] font-bold">Telangana</span>
+<h3 class="font-serif text-lg font-bold text-primary mt-2">Pochampally Ikat</h3>
+<p class="text-xs text-secondary-dark font-medium mb-2">Double Ikat Pit Looms</p>
+<p class="text-xs text-text-muted leading-relaxed">Intricate tie-and-dye weaving where patterns are calculated mathematically on the yarn prior to the loom.</p>
+</div>
+<div class="pt-4 mt-4 border-t border-border flex items-center justify-between">
+<span class="text-xs font-bold text-primary">From ₹1,450</span>
+<button class="text-xs text-secondary-dark font-bold hover:underline" onclick="filterByBudgetTag('textiles'); showScreen('screen-home')">View Crafts →</button>
+</div>
+</div>
+<!-- 6. Terracotta -->
+<div class="bg-white border border-border rounded-xl p-5 craft-shadow flex flex-col justify-between">
+<div>
+<span class="px-2 py-0.5 rounded bg-secondary-light text-secondary-dark text-[10px] font-bold">Uttar Pradesh</span>
+<h3 class="font-serif text-lg font-bold text-primary mt-2">Gorakhpur Terracotta</h3>
+<p class="text-xs text-secondary-dark font-medium mb-2">Natural Earth &amp; Diya Art</p>
+<p class="text-xs text-text-muted leading-relaxed">Pure river silt earth thrown on unmotorized foot wheels and husk smoke-fired to natural terracotta warmth.</p>
+</div>
+<div class="pt-4 mt-4 border-t border-border flex items-center justify-between">
+<span class="text-xs font-bold text-primary">From ₹450</span>
+<button class="text-xs text-secondary-dark font-bold hover:underline" onclick="filterByBudgetTag('pottery'); showScreen('screen-home')">View Crafts →</button>
+</div>
+</div>
+<!-- 7. Brassware -->
+<div class="bg-white border border-border rounded-xl p-5 craft-shadow flex flex-col justify-between">
+<div>
+<span class="px-2 py-0.5 rounded bg-secondary-light text-secondary-dark text-[10px] font-bold">Uttar Pradesh</span>
+<h3 class="font-serif text-lg font-bold text-primary mt-2">Moradabad Brass</h3>
+<p class="text-xs text-secondary-dark font-medium mb-2">Lathe-Tuned Bell Metal</p>
+<p class="text-xs text-text-muted leading-relaxed">Solid 80/20 brass sand-cast, hand-turned, and chiseled with delicate floral lotus motifs.</p>
+</div>
+<div class="pt-4 mt-4 border-t border-border flex items-center justify-between">
+<span class="text-xs font-bold text-primary">From ₹950</span>
+<button class="text-xs text-secondary-dark font-bold hover:underline" onclick="filterByBudgetTag('metal'); showScreen('screen-home')">View Crafts →</button>
+</div>
+</div>
+<!-- 8. Wood Carving -->
+<div class="bg-white border border-border rounded-xl p-5 craft-shadow flex flex-col justify-between">
+<div>
+<span class="px-2 py-0.5 rounded bg-secondary-light text-secondary-dark text-[10px] font-bold">Uttar Pradesh</span>
+<h3 class="font-serif text-lg font-bold text-primary mt-2">Saharanpur Carving</h3>
+<p class="text-xs text-secondary-dark font-medium mb-2">Sheesham Jaali Filigree</p>
+<p class="text-xs text-text-muted leading-relaxed">Hand-chiseled openwork floral jaali carvings in durable rosewood finished with organic beeswax.</p>
+</div>
+<div class="pt-4 mt-4 border-t border-border flex items-center justify-between">
+<span class="text-xs font-bold text-primary">From ₹2,200</span>
+<button class="text-xs text-secondary-dark font-bold hover:underline" onclick="filterByBudgetTag('toys'); showScreen('screen-home')">View Crafts →</button>
+</div>
+</div>
+</div>
+</section>
+<!-- --------------------------------------------------------------------- -->
+<!-- VIEW D: ARTISAN PROFILE                                               -->
+<!-- --------------------------------------------------------------------- -->
+<section class="hidden py-6" id="screen-artisan">
+<div class="bg-white border border-border rounded-xl p-6 sm:p-8 craft-shadow mb-8">
+<div class="flex flex-col md:flex-row gap-6 items-start">
+<div class="w-32 h-32 rounded-xl overflow-hidden border-2 border-secondary shrink-0">
+<img alt="Master Devendra Chitrakar" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAWguiuQaUJtglOftPDmK8_5Je9caXFiMYKPYZC8Cjv86OtQYyoQ90eezWWpn9tZUxMJWyoEtXro07tZRs8rQ5CM4vEvtyQ4UVNBzZUsJuU8gqhtu1tIDotMKWwg5Rqlo8zUlVFCKvf-vdYu2tfiF2EzU4nDlgttmJNof9W2snv4OOerqCAXFcDNc7xHaU_McC-EODTFzg7Z5IUOLeopJSV-2oXhAHaAeSCjiz1tv-g"/>
+</div>
+<div class="flex-1">
+<div class="flex flex-wrap items-center justify-between gap-3 mb-2">
+<div>
+<h2 class="font-serif text-2xl sm:text-3xl font-bold text-primary">Master Devendra Chitrakar</h2>
+<p class="text-xs sm:text-sm text-secondary-dark font-semibold">7th Generation Kalamkari Master • Srikalahasti, Andhra Pradesh</p>
+</div>
+<div class="flex items-center gap-2">
+<button class="px-3 py-1.5 border border-primary rounded text-xs font-bold hover:bg-surface-muted transition-colors" onclick="alert('Message sent to Master Devendra workshop. You will receive a direct reply via SMS/WhatsApp.')">
+                  Message Artisan
+                </button>
+<button class="px-3 py-1.5 bg-primary text-white rounded text-xs font-bold hover:bg-secondary transition-colors" onclick="openStoryModal(10)">
+                  View Featured Scroll (₹3,200)
+                </button>
+</div>
+</div>
+<!-- Stats -->
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-3 py-3 my-3 border-y border-border text-center sm:text-left">
+<div>
+<span class="text-[11px] text-text-muted block">Family Lineage</span>
+<span class="font-serif text-lg font-bold text-primary">182 Years</span>
+</div>
+<div>
+<span class="text-[11px] text-text-muted block">Direct Payout</span>
+<span class="font-serif text-lg font-bold text-secondary-dark">94% of Price</span>
+</div>
+<div>
+<span class="text-[11px] text-text-muted block">Crafts Shipped</span>
+<span class="font-serif text-lg font-bold text-primary">148 Orders</span>
+</div>
+<div>
+<span class="text-[11px] text-text-muted block">Buyer Rating</span>
+<span class="font-serif text-lg font-bold text-primary">⭐ 4.98 / 5</span>
+</div>
+</div>
+<p class="text-xs sm:text-sm text-text-muted leading-relaxed">
+              "We maintain 23 traditional steps in our workshop. Each cotton cloth is soaked in pure buffalo milk and dried in the open sun. We draw lines with bamboo pens using iron filings fermented with jaggery, then wash the scroll in the Swarnamukhi River to fix the dyes permanently."
+            </p>
+</div>
+</div>
+</div>
+</section>
+<!-- --------------------------------------------------------------------- -->
+<!-- VIEW E: ARTISAN STUDIO PORTAL                                         -->
+<!-- --------------------------------------------------------------------- -->
+<section class="hidden py-6" id="screen-portal">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-4 border-b border-border">
+<div>
+<span class="text-xs font-bold text-secondary-dark uppercase tracking-wider">Artisan Partner Portal</span>
+<h2 class="font-serif text-2xl font-bold text-primary">Master Devendra Atelier Dashboard</h2>
+<p class="text-xs text-text-muted">Track your listings, incoming orders, and direct bank payouts.</p>
+</div>
+<button class="px-4 py-2 bg-primary text-white rounded text-xs font-bold hover:bg-secondary transition-colors flex items-center gap-1.5 self-start sm:self-auto" onclick="alert('Upload Modal: Add photos, dimensions, materials, and set direct fair price.')">
+<span class="material-symbols-outlined text-[16px]">add_circle</span>
+<span>List New Craft Item</span>
+</button>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+<div class="bg-white border border-border rounded-xl p-5 craft-shadow">
+<span class="text-xs text-text-muted uppercase">YTD Direct Earnings</span>
+<p class="font-serif text-2xl font-bold text-primary mt-1">₹3,42,800</p>
+<span class="text-[11px] text-green-700 font-semibold">94% direct margin received</span>
+</div>
+<div class="bg-white border border-border rounded-xl p-5 craft-shadow">
+<span class="text-xs text-text-muted uppercase">Active Product Listings</span>
+<p class="font-serif text-2xl font-bold text-primary mt-1">10 Crafts</p>
+<span class="text-[11px] text-text-muted">From ₹450 to ₹3,200</span>
+</div>
+<div class="bg-white border border-border rounded-xl p-5 craft-shadow">
+<span class="text-xs text-text-muted uppercase">Customer Rating</span>
+<p class="font-serif text-2xl font-bold text-primary mt-1">⭐ 4.98</p>
+<span class="text-[11px] text-secondary-dark font-semibold">192 verified reviews</span>
+</div>
+</div>
+<div class="bg-white border border-border rounded-xl overflow-hidden craft-shadow">
+<div class="p-4 border-b border-border bg-surface-muted flex items-center justify-between">
+<h4 class="font-bold text-sm text-primary">Live Workshop Inventory</h4>
+<span class="text-[11px] text-text-muted">Connected to bank: State Bank of India</span>
+</div>
+<table class="w-full text-left text-xs">
+<thead class="bg-surface text-text-muted border-b border-border">
+<tr>
+<th class="p-3">Craft Name</th>
+<th class="p-3">Craft Time</th>
+<th class="p-3">Price</th>
+<th class="p-3">Status</th>
+<th class="p-3 text-right">Action</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-border">
+<tr>
+<td class="p-3 font-semibold text-primary">Tree of Life Hand-Drawn Scroll</td>
+<td class="p-3">10 Days</td>
+<td class="p-3 font-bold">₹3,200</td>
+<td class="p-3"><span class="px-2 py-0.5 bg-green-100 text-green-800 rounded text-[10px] font-bold">Live</span></td>
+<td class="p-3 text-right"><button class="text-secondary-dark font-bold hover:underline" onclick="openStoryModal(10)">View</button></td>
+</tr>
+<tr>
+<td class="p-3 font-semibold text-primary">Miniature Dancing Bobble Toy</td>
+<td class="p-3">2 Days</td>
+<td class="p-3 font-bold">₹650</td>
+<td class="p-3"><span class="px-2 py-0.5 bg-green-100 text-green-800 rounded text-[10px] font-bold">Live</span></td>
+<td class="p-3 text-right"><button class="text-secondary-dark font-bold hover:underline" onclick="openStoryModal(3)">View</button></td>
+</tr>
+<tr>
+<td class="p-3 font-semibold text-primary">Terracotta Incense &amp; Diya Set</td>
+<td class="p-3">1 Day</td>
+<td class="p-3 font-bold">₹450</td>
+<td class="p-3"><span class="px-2 py-0.5 bg-green-100 text-green-800 rounded text-[10px] font-bold">Live</span></td>
+<td class="p-3 text-right"><button class="text-secondary-dark font-bold hover:underline" onclick="openStoryModal(1)">View</button></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<!-- --------------------------------------------------------------------- -->
+<!-- VIEW F: IMPACT METRICS DASHBOARD                                      -->
+<!-- --------------------------------------------------------------------- -->
+<section class="hidden py-6" id="screen-impact">
+<div class="text-center max-w-3xl mx-auto mb-10">
+<span class="text-xs font-bold text-secondary-dark uppercase tracking-wider block mb-1">Preserving Cultures &amp; Livelihoods</span>
+<h2 class="font-serif text-3xl font-bold text-primary mb-2">Our Grassroots Social &amp; Economic Impact</h2>
+<p class="text-sm text-text-muted">By cutting out intermediate wholesalers and city boutiques, our transparent model makes handcrafted art affordable while doubling artisan wages.</p>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+<div class="bg-white border border-border rounded-xl p-5 text-center craft-shadow">
+<p class="font-serif text-3xl font-bold text-primary">1,480+</p>
+<span class="text-xs font-bold text-text-main mt-1 block">Artisans</span>
+<span class="text-[10px] text-text-muted">Across 16 states</span>
+</div>
+<div class="bg-white border border-border rounded-xl p-5 text-center craft-shadow">
+<p class="font-serif text-3xl font-bold text-secondary-dark">₹450</p>
+<span class="text-xs font-bold text-text-main mt-1 block">Starts At</span>
+<span class="text-[10px] text-text-muted">Affordable to everyone</span>
+</div>
+<div class="bg-white border border-border rounded-xl p-5 text-center craft-shadow">
+<p class="font-serif text-3xl font-bold text-green-700">94%</p>
+<span class="text-xs font-bold text-text-main mt-1 block">Direct Payout</span>
+<span class="text-[10px] text-text-muted">To village accounts</span>
+</div>
+<div class="bg-white border border-border rounded-xl p-5 text-center craft-shadow">
+<p class="font-serif text-3xl font-bold text-primary">100%</p>
+<span class="text-xs font-bold text-text-main mt-1 block">Natural</span>
+<span class="text-[10px] text-text-muted">Zero artificial plastic</span>
+</div>
+<div class="col-span-2 md:col-span-1 bg-white border border-border rounded-xl p-5 text-center craft-shadow">
+<p class="font-serif text-3xl font-bold text-primary">280+</p>
+<span class="text-xs font-bold text-text-main mt-1 block">Apprentices</span>
+<span class="text-[10px] text-text-muted">Trained in heritage art</span>
+</div>
+</div>
+</section>
+</main>
+<!-- ========================================================================= -->
+<!-- 5. INTERACTIVE ARTWORK STORY & QUALITY MODAL                              -->
+<!-- ========================================================================= -->
+<div class="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 hidden" id="story-modal">
+<div class="bg-white border border-border rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-2xl relative">
+<button class="absolute top-4 right-4 z-10 w-8 h-8 rounded-full bg-surface-muted hover:bg-border text-primary flex items-center justify-center text-sm font-bold" onclick="closeStoryModal()">
+        ✕
+      </button>
+<div class="grid grid-cols-1 md:grid-cols-2">
+<!-- Visual col -->
+<div class="p-6 bg-surface-muted flex flex-col justify-between">
+<div class="aspect-square rounded-xl overflow-hidden border border-border bg-white mb-4">
+<img alt="Craft image" class="w-full h-full object-cover" id="modal-img" src=""/>
+</div>
+<div class="space-y-2 text-xs">
+<div class="p-2.5 rounded bg-white border border-border flex items-center justify-between">
+<span class="text-text-muted">Provenance:</span>
+<span class="font-bold text-primary" id="modal-origin"></span>
+</div>
+<div class="p-2.5 rounded bg-white border border-border flex items-center justify-between">
+<span class="text-text-muted">Crafting Time:</span>
+<span class="font-bold text-primary" id="modal-time"></span>
+</div>
+<div class="p-2 rounded bg-green-50 border border-green-200 text-green-800 text-center font-bold">
+              ✓ 94% of this payment goes directly to the maker.
+            </div>
+</div>
+</div>
+<!-- Detail col -->
+<div class="p-6 flex flex-col justify-between">
+<div>
+<span class="text-[10px] font-bold text-secondary-dark uppercase tracking-wider">GI Certified Handicraft</span>
+<h3 class="font-serif text-xl sm:text-2xl font-bold text-primary mt-1 mb-1" id="modal-title"></h3>
+<p class="text-xs text-text-muted mb-3 font-medium" id="modal-artist"></p>
+<div class="flex items-baseline gap-2 mb-4 pb-3 border-b border-border">
+<span class="font-serif text-2xl font-bold text-primary" id="modal-price"></span>
+<span class="line-through text-text-muted text-xs" id="modal-retail"></span>
+<span class="text-[10px] font-bold text-green-700 bg-green-50 px-2 py-0.5 rounded">50% Direct Saving</span>
+</div>
+<div class="mb-4">
+<h5 class="text-xs font-bold text-primary uppercase tracking-wider mb-1">Traditional Technique &amp; Materials</h5>
+<p class="text-xs text-text-muted leading-relaxed" id="modal-desc"></p>
+</div>
+</div>
+<div class="space-y-2 pt-4 border-t border-border">
+<button class="w-full py-2.5 rounded bg-primary text-white hover:bg-secondary text-xs font-bold transition-colors" id="modal-cart-btn" onclick="">
+              Add to Cart
+            </button>
+<button class="w-full py-2 rounded border border-border hover:bg-surface-muted text-primary text-xs font-semibold transition-colors" onclick="closeStoryModal(); showScreen('screen-artisan')">
+              View Artisan Profile
+            </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- ========================================================================= -->
+<!-- 6. CART & CHECKOUT MODAL                                                  -->
+<!-- ========================================================================= -->
+<div class="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 hidden" id="cart-modal">
+<div class="bg-white border border-border rounded-2xl max-w-md w-full p-6 shadow-2xl relative">
+<button class="absolute top-4 right-4 text-text-muted hover:text-primary text-base font-bold" onclick="toggleCartModal()">✕</button>
+<div class="flex items-center gap-2 mb-4 pb-3 border-b border-border">
+<span class="material-symbols-outlined text-secondary text-2xl">shopping_bag</span>
+<h3 class="font-serif text-lg font-bold text-primary">Your Craft Cart (<span id="cart-modal-count">2</span>)</h3>
+</div>
+<!-- Items List -->
+<div class="space-y-3 mb-4 max-h-60 overflow-y-auto" id="cart-items-container">
+<div class="flex items-center justify-between p-2.5 rounded bg-surface-muted border border-border text-xs">
+<div>
+<p class="font-bold text-primary">Terracotta Incense &amp; Diya Set</p>
+<span class="text-text-muted text-[11px]">Qty: 1 • Direct from Gorakhpur</span>
+</div>
+<span class="font-serif font-bold text-primary">₹450</span>
+</div>
+<div class="flex items-center justify-between p-2.5 rounded bg-surface-muted border border-border text-xs">
+<div>
+<p class="font-bold text-primary">Blue Pottery Tea Mug Set (Pair)</p>
+<span class="text-text-muted text-[11px]">Qty: 1 • Direct from Jaipur</span>
+</div>
+<span class="font-serif font-bold text-primary">₹1,200</span>
+</div>
+</div>
+<!-- Summary -->
+<div class="bg-secondary-light/40 border border-secondary/20 rounded p-3 text-xs space-y-1.5 mb-4">
+<div class="flex justify-between text-text-muted">
+<span>Artisans Payout (94%):</span>
+<span class="font-bold text-text-main" id="cart-artisan-payout">₹1,551</span>
+</div>
+<div class="flex justify-between text-text-muted">
+<span>Direct Eco-Packaging:</span>
+<span class="text-green-700 font-bold">FREE</span>
+</div>
+<div class="flex justify-between font-bold text-sm text-primary pt-1 border-t border-border">
+<span>Total Direct Price:</span>
+<span class="font-serif text-base text-primary" id="cart-total-price">₹1,650</span>
+</div>
+</div>
+<button class="w-full py-3 rounded bg-primary text-white hover:bg-secondary text-xs font-bold transition-colors" onclick="handleCheckoutDemo()">
+        Complete Purchase
+      </button>
+<p class="text-[10px] text-center text-text-muted mt-2">100% money-back guarantee if not satisfied with authenticity.</p>
+</div>
+</div>
+<!-- ========================================================================= -->
+<!-- 7. "WHY IS THIS AFFORDABLE?" MODAL                                        -->
+<!-- ========================================================================= -->
+<div class="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 hidden" id="pricing-info-modal">
+<div class="bg-white border border-border rounded-2xl max-w-lg w-full p-6 shadow-2xl relative">
+<button class="absolute top-4 right-4 text-text-muted hover:text-primary font-bold" onclick="togglePricingInfoModal()">✕</button>
+<div class="flex items-center gap-2 mb-3">
+<span class="material-symbols-outlined text-secondary text-2xl">savings</span>
+<h3 class="font-serif text-xl font-bold text-primary">How We Keep Crafts Affordable</h3>
+</div>
+<p class="text-xs text-text-muted leading-relaxed mb-4">
+        Most people assume genuine handmade Indian crafts cost ₹10,000+ because high-end city galleries and luxury stores add high markups.
+      </p>
+<div class="space-y-3 text-xs mb-5">
+<div class="p-3 rounded bg-surface-muted border border-border">
+<p class="font-bold text-primary mb-0.5">1. Zero Showroom Rent &amp; Wholesalers</p>
+<p class="text-text-muted">By shipping directly from artisan villages, we eliminate 3 to 4 layers of middlemen markups.</p>
+</div>
+<div class="p-3 rounded bg-surface-muted border border-border">
+<p class="font-bold text-primary mb-0.5">2. 94% Direct Wage to Makers</p>
+<p class="text-text-muted">Artisans earn twice as much as they would selling to brokers, even while consumer prices stay lower.</p>
+</div>
+<div class="p-3 rounded bg-surface-muted border border-border">
+<p class="font-bold text-primary mb-0.5">3. Genuine Accessible Craft Range</p>
+<p class="text-text-muted">From ₹450 daily clay sets and ₹650 folk toys up to ₹3,200 detailed scrolls, there is authentic art for every home budget.</p>
+</div>
+</div>
+<button class="w-full py-2.5 rounded bg-primary text-white text-xs font-bold hover:bg-secondary transition-colors" onclick="togglePricingInfoModal()">
+        Got it, let's explore crafts
+      </button>
+</div>
+</div>
+<!-- ========================================================================= -->
+<!-- 8. FOOTER                                                                 -->
+<!-- ========================================================================= -->
+<footer class="bg-primary text-white/80 py-8 px-4 border-t border-border mt-auto text-xs">
+<div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+<div class="flex items-center gap-2">
+<span class="w-7 h-7 rounded bg-secondary text-white font-serif font-bold flex items-center justify-center">H</span>
+<span class="font-serif text-base font-bold text-white">HeritageConnect</span>
+<span class="text-text-muted text-[11px] ml-2">© 2025 Guild Foundation. Certified Non-profit Social Venture.</span>
+</div>
+<div class="flex flex-wrap items-center gap-4 text-[11px]">
+<button class="hover:text-white underline" onclick="togglePricingInfoModal()">Why We Are Affordable</button>
+<button class="hover:text-white" onclick="showScreen('screen-lineages')">8 Craft Lineages</button>
+<button class="hover:text-white" onclick="showScreen('screen-artisan')">Artisan Stories</button>
+<button class="hover:text-white" onclick="showScreen('screen-impact')">Impact Dashboard</button>
+</div>
+</div>
+</footer>
+<!-- ========================================================================= -->
+<!-- JAVASCRIPT: DATA & INTERACTIVITY                                          -->
+<!-- ========================================================================= -->
+<script>
+    // Product data registry
+    const PRODUCTS = {
+      1: {
+        title: "Terracotta Incense & Diya Set",
+        price: 450,
+        retail: "₹900 retail",
+        artist: "Master Ram Prasad • Gorakhpur Cluster, UP",
+        time: "1 Full Day",
+        origin: "Gorakhpur, Uttar Pradesh",
+        img: "https://images.unsplash.com/photo-1606744888344-493238955dd5?auto=format&fit=crop&w=600&q=80",
+        desc: "Each diya and incense vessel is hand-thrown on an unmotorized foot wheel using pure river silt clay, sun-baked for 14 hours, and smoke-fired with natural rice husk to yield an organic earthy terracotta finish."
+      },
+      2: {
+        title: "Hand-Painted Coaster Set (4 Pcs)",
+        price: 550,
+        retail: "₹1,100 retail",
+        artist: "Sita Devi Women's Guild • Mithila, Bihar",
+        time: "2 Days",
+        origin: "Mithila, Bihar",
+        img: "https://lh3.googleusercontent.com/aida-public/AB6AXuCQloTU6n-Ogz1D4JwtRX9sLwSzRSP4_ETOe_92LPLCfZM-QkvRw1eqnZQyu7qiFvH_fRAaokg84Ang8YHndo2uc3lq7yyU0AgjQINGrKobybUEhZS81FLJqonUkoGvpcsb5yTSgEMRJDNNBHhu75unluxiv0gBPUI78REMnpwh8DwKTfO0yTcBb_CAsGL2iTxs9LjxujNIvdo7cNJdU4n_3x_k49HOvO1riLY3DV02",
+        desc: "Rendered with sharpened bamboo twigs dipped in soot ink and wild turmeric washes on recycled handmade cotton paper. Celebrates rural flora and nature with authentic double lines."
+      },
+      3: {
+        title: "Miniature Dancing Bobble Toy",
+        price: 650,
+        retail: "₹1,300 retail",
+        artist: "Master K. Nageswara Rao • Krishna District, AP",
+        time: "2 Days",
+        origin: "Kondapalli, Andhra Pradesh",
+        img: "https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?auto=format&fit=crop&w=600&q=80",
+        desc: "Hand-carved from sustainable, lightweight Tella Poniki softwood. Smoothed with natural tamarind seed paste and balanced on a brass pivot point for gentle dancing motion."
+      },
+      4: {
+        title: "Hand-Etched Acoustic Temple Bell",
+        price: 950,
+        retail: "₹1,900 retail",
+        artist: "Ustad Farooq Ahmed • Moradabad, UP",
+        time: "3 Days",
+        origin: "Moradabad, Uttar Pradesh",
+        img: "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=600&q=80",
+        desc: "Cast using sand molds and hand-turned on wooden lathes to produce clear acoustic resonance. Decorated with traditional chiseled floral lotus borders."
+      },
+      5: {
+        title: "Blue Pottery Tea Mug Set (Pair)",
+        price: 1200,
+        retail: "₹2,400 retail",
+        artist: "Kripal Kumbh Heritage Atelier • Jaipur",
+        time: "4 Days",
+        origin: "Jaipur, Rajasthan",
+        img: "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=600&q=80",
+        desc: "Handcrafted without clay using powdered quartz stone, raw glass, and natural katira gum. Hand-painted with natural cobalt oxide and glazed with non-toxic food-safe glass."
+      },
+      6: {
+        title: "Handwoven Ikat Silk-Cotton Stole",
+        price: 1450,
+        retail: "₹2,900 retail",
+        artist: "Bhoodan Weavers Coop • Pochampally",
+        time: "5 Days",
+        origin: "Pochampally, Telangana",
+        img: "https://images.unsplash.com/photo-1607344645866-009c320c5ab8?auto=format&fit=crop&w=600&q=80",
+        desc: "Yarns are bound and resist-dyed before weaving on traditional wooden pit looms. Features geometric symmetry with pure mulberry silk sheen and breathable cotton."
+      },
+      7: {
+        title: "Cheriyal Folk Narrative Wall Mask",
+        price: 1850,
+        retail: "₹3,700 retail",
+        artist: "Master D. Vaikuntam • Cheriyal Village",
+        time: "6 Days",
+        origin: "Cheriyal, Telangana",
+        img: "https://images.unsplash.com/photo-1582562124811-c09040d0a901?auto=format&fit=crop&w=600&q=80",
+        desc: "Sculpted using a historic mixture of teak sawdust and boiled tamarind seed paste. Painted with crushed seashell white, natural indigo, and red mineral pigments."
+      },
+      8: {
+        title: "Jaali Filigree Carved Keepsake Box",
+        price: 2200,
+        retail: "₹4,400 retail",
+        artist: "Master Irfan Ansari • Saharanpur",
+        time: "4 Days",
+        origin: "Saharanpur, Uttar Pradesh",
+        img: "https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&w=600&q=80",
+        desc: "Carved entirely with handheld chisels into seasoned Indian Sheesham rosewood. Polished with organic beeswax to highlight rich natural wood grain."
+      },
+      9: {
+        title: "Surya Deva Celestial Folk Canvas",
+        price: 2850,
+        retail: "₹5,700 retail",
+        artist: "Smt. Ganga Devi Clan • Ranti Village",
+        time: "7 Days",
+        origin: "Mithila, Bihar",
+        img: "https://lh3.googleusercontent.com/aida-public/AB6AXuCQloTU6n-Ogz1D4JwtRX9sLwSzRSP4_ETOe_92LPLCfZM-QkvRw1eqnZQyu7qiFvH_fRAaokg84Ang8YHndo2uc3lq7yyU0AgjQINGrKobybUEhZS81FLJqonUkoGvpcsb5yTSgEMRJDNNBHhu75unluxiv0gBPUI78REMnpwh8DwKTfO0yTcBb_CAsGL2iTxs9LjxujNIvdo7cNJdU4n_3x_k49HOvO1riLY3DV02",
+        desc: "Intricate depiction of Surya, the sun god, drawn with nibs dipped in lampblack soot on handmade paper, framed with ritual borders."
+      },
+      10: {
+        title: "Tree of Life Hand-Drawn Scroll",
+        price: 3200,
+        retail: "₹6,800 retail",
+        artist: "Master Devendra Chitrakar (7th Gen)",
+        time: "10 Days",
+        origin: "Srikalahasti, Andhra Pradesh",
+        img: "https://lh3.googleusercontent.com/aida-public/AB6AXuDV7GYPPT8Qns4GIurHsU8OBywdun1if4E14PEXL8Acdd6tNjyF6uDZ209-zTl4P5GkCYaxh5dXbV_HeM_KiKml5-CDB3fg7tJUOXwbhPk4hCEhO6EGiF1OBNIUalroy8kFS5TcILSKhGsrd4CodMdgz7BQyilVeyjAHGgIScvvEFIG7LpY7mK_KsL7RZ21yyt_eH1qTKUOu5Fr9p-K1nWmP0b_JAI3E18gTN0xfoff",
+        desc: "Hand-painted on hand-spun khadi cotton soaked in buffalo milk, drawn with bamboo pens dipped in fermented iron acetate, and washed 7 times in the Swarnamukhi River."
+      }
+    };
+
+    // Firebase Firestore Realtime Sync
+    if (window.HeritageDB) {
+      window.HeritageDB.subscribeProducts((firestoreProducts) => {
+        if (firestoreProducts && firestoreProducts.length > 0) {
+          firestoreProducts.forEach(fp => {
+            const numericId = String(fp.id).replace('prod-', '');
+            PRODUCTS[numericId] = fp;
+            PRODUCTS[fp.id] = fp;
+          });
+        }
+      });
+    }
+
+    // Navigation controller
+    function showScreen(screenId) {
+      document.querySelectorAll('#app-viewport > section').forEach(sec => sec.classList.add('hidden'));
+      const target = document.getElementById(screenId);
+      if (target) {
+        target.classList.remove('hidden');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      // Update demo switcher tab styles
+      const tabMap = {
+        'screen-splash': 'tab-splash',
+        'screen-home': 'tab-home',
+        'screen-lineages': 'tab-lineages',
+        'screen-artisan': 'tab-artisan',
+        'screen-portal': 'tab-portal',
+        'screen-impact': 'tab-impact'
+      };
+
+      document.querySelectorAll('#tour-nav button').forEach(btn => {
+        btn.classList.remove('bg-secondary', 'font-bold');
+        btn.classList.add('bg-white/10', 'font-medium');
+      });
+
+      if (tabMap[screenId]) {
+        const activeBtn = document.getElementById(tabMap[screenId]);
+        if (activeBtn) {
+          activeBtn.classList.remove('bg-white/10', 'font-medium');
+          activeBtn.classList.add('bg-secondary', 'font-bold');
+        }
+      }
+    }
+
+    // Modal controllers
+    function openStoryModal(productId) {
+      const p = PRODUCTS[productId];
+      if (!p) return;
+      document.getElementById('modal-img').src = p.img;
+      document.getElementById('modal-title').textContent = p.title;
+      document.getElementById('modal-artist').textContent = p.artist;
+      document.getElementById('modal-price').textContent = "₹" + p.price.toLocaleString('en-IN');
+      document.getElementById('modal-retail').textContent = p.retail;
+      document.getElementById('modal-origin').textContent = p.origin;
+      document.getElementById('modal-time').textContent = p.time;
+      document.getElementById('modal-desc').textContent = p.desc;
+      document.getElementById('modal-cart-btn').setAttribute('onclick', `addToCart('${p.title}', ${p.price}); closeStoryModal();`);
+      document.getElementById('story-modal').classList.remove('hidden');
+    }
+
+    function closeStoryModal() {
+      document.getElementById('story-modal').classList.add('hidden');
+    }
+
+    function toggleCartModal() {
+      const modal = document.getElementById('cart-modal');
+      modal.classList.toggle('hidden');
+    }
+
+    function togglePricingInfoModal() {
+      const modal = document.getElementById('pricing-info-modal');
+      modal.classList.toggle('hidden');
+    }
+
+    // Cart management
+    let cart = [
+      { name: "Terracotta Incense & Diya Set", price: 450 },
+      { name: "Blue Pottery Tea Mug Set (Pair)", price: 1200 }
+    ];
+
+    function addToCart(name, price) {
+      cart.push({ name, price });
+      updateCartDisplay();
+      alert(`Added "${name}" (₹${price}) to your cart! Total items: ${cart.length}`);
+    }
+
+    function updateCartDisplay() {
+      const count = cart.length;
+      document.getElementById('cart-counter-nav').textContent = count;
+      document.getElementById('cart-counter-badge').textContent = count;
+      document.getElementById('cart-modal-count').textContent = count;
+
+      const container = document.getElementById('cart-items-container');
+      container.innerHTML = '';
+      let total = 0;
+      cart.forEach(item => {
+        total += item.price;
+        const div = document.createElement('div');
+        div.className = "flex items-center justify-between p-2.5 rounded bg-surface-muted border border-border text-xs";
+        div.innerHTML = `<div><p class="font-bold text-primary">${item.name}</p><span class="text-text-muted text-[11px]">100% Direct from Artisan</span></div><span class="font-serif font-bold text-primary">₹${item.price.toLocaleString('en-IN')}</span>`;
+        container.appendChild(div);
+      });
+
+      const artisanShare = Math.round(total * 0.94);
+      document.getElementById('cart-artisan-payout').textContent = "₹" + artisanShare.toLocaleString('en-IN');
+      document.getElementById('cart-total-price').textContent = "₹" + total.toLocaleString('en-IN');
+    }
+
+    async function handleCheckoutDemo() {
+      const total = cart.reduce((a, c) => a + c.price, 0);
+      const itemsList = [...cart];
+      let orderId = "HC-GI-" + Math.floor(10000 + Math.random() * 90000);
+
+      // Save order to Firebase Cloud Firestore
+      if (window.HeritageDB) {
+        try {
+          const savedOrder = await window.HeritageDB.createOrder({
+            customerName: "Patron Craft Connoisseur",
+            customerEmail: "patron@heritageconnect.org",
+            customerLocation: "New Delhi, India",
+            items: itemsList,
+            totalAmount: total
+          });
+          if (savedOrder && savedOrder.orderId) {
+            orderId = savedOrder.orderId;
+          }
+        } catch (e) {
+          console.warn("Could not write order to Firestore:", e);
+        }
+      }
+
+      alert("🎉 Order Confirmed! ₹" + total.toLocaleString('en-IN') + " payment complete.\n\n✓ Order recorded in Cloud Firestore database\n✓ 94% direct share (₹" + Math.round(total * 0.94).toLocaleString('en-IN') + ") credited to artisan cooperative.\n\nTracking ID: " + orderId);
+      cart = [];
+      updateCartDisplay();
+      toggleCartModal();
+    }
+
+    // Filter by price range
+    function filterByPrice(range) {
+      document.querySelectorAll('.price-btn').forEach(btn => {
+        btn.classList.remove('bg-primary', 'text-white');
+        btn.classList.add('bg-surface-muted', 'text-text-main');
+      });
+
+      const targetBtn = document.getElementById(`btn-price-${range}`);
+      if (targetBtn) {
+        targetBtn.classList.remove('bg-surface-muted', 'text-text-main');
+        targetBtn.classList.add('bg-primary', 'text-white');
+      }
+
+      let count = 0;
+      document.querySelectorAll('.product-item').forEach(card => {
+        const price = parseInt(card.dataset.price);
+        const tags = card.dataset.tag || '';
+        let match = false;
+
+        if (range === 'all') match = true;
+        else if (range === 'under-1000' && price <= 1000) match = true;
+        else if (range === '1000-2000' && price > 1000 && price <= 2000) match = true;
+        else if (range === '2000-3500' && price > 2000) match = true;
+        else if (range === 'gifts' && tags.includes('gifts')) match = true;
+
+        if (match) {
+          card.classList.remove('hidden');
+          count++;
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+      document.getElementById('items-count-badge').textContent = `${count} Items Showing`;
+    }
+
+    // Category dropdown filter
+    function filterByCategoryDropdown(cat) {
+      let count = 0;
+      document.querySelectorAll('.product-item').forEach(card => {
+        if (cat === 'all' || card.dataset.cat === cat) {
+          card.classList.remove('hidden');
+          count++;
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+      document.getElementById('items-count-badge').textContent = `${count} Items Showing`;
+    }
+
+    // Chip quick tag filter
+    function filterByBudgetTag(tag) {
+      showScreen('screen-home');
+      if (tag === 'under-1000') {
+        filterByPrice('under-1000');
+      } else {
+        filterByCategoryDropdown(tag);
+        document.getElementById('craft-category-dropdown').value = tag;
+      }
+    }
+
+    // Keyword search filter
+    function filterBySearch(query) {
+      const q = query.toLowerCase().trim();
+      let count = 0;
+      document.querySelectorAll('.product-item').forEach(card => {
+        const text = card.textContent.toLowerCase();
+        if (!q || text.includes(q)) {
+          card.classList.remove('hidden');
+          count++;
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+      document.getElementById('items-count-badge').textContent = `${count} Items Showing`;
+    }
+
+    // Sort items
+    function sortItems(criteria) {
+      const grid = document.getElementById('products-grid');
+      const items = Array.from(grid.querySelectorAll('.product-item'));
+
+      items.sort((a, b) => {
+        const priceA = parseInt(a.dataset.price);
+        const priceB = parseInt(b.dataset.price);
+        if (criteria === 'price-asc') return priceA - priceB;
+        if (criteria === 'price-desc') return priceB - priceA;
+        return parseInt(a.dataset.id) - parseInt(b.dataset.id);
+      });
+
+      items.forEach(item => grid.appendChild(item));
+    }
+  </script>
+</body>
+</html>

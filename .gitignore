@@ -1,0 +1,13 @@
+# OS & Temp Files
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# Local Environment Variables & Secrets
+.env
+.env.local
+*.local
+
+# Editor directories
+.vscode/
+.idea/

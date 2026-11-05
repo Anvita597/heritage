@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Firebase Firestore Database Manager — HeritageConnect</title>
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect"/>
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <!-- Material Symbols Outlined -->
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            primary: "#0F1B29",
+            secondary: "#B8860B",
+            "secondary-dark": "#8B6508",
+            "secondary-light": "#FFF8E7",
+            surface: "#FBF9F6",
+            "surface-card": "#FFFFFF",
+            "surface-muted": "#F4EFEA",
+            border: "#E7DFD5",
+            accent: "#C85A32"
+          },
+          fontFamily: {
+            serif: ["'Playfair Display'", "Georgia", "serif"],
+            sans: ["'Plus Jakarta Sans'", "system-ui", "sans-serif"]
+          }
+        }
+      }
+    };
+  </script>
+
+  <!-- Firebase 10 Compat CDN Scripts -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+  <!-- Heritage Database Modules -->
+  <script src="firebase-config.js"></script>
+  <script src="firebase-db.js"></script>
+
+  <style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+      font-size: 19px;
+      line-height: 1;
+      display: inline-block;
+      vertical-align: middle;
+    }
+  </style>
+</head>
+<body class="bg-surface text-gray-800 font-sans min-h-screen flex flex-col">
+
+  <!-- Header -->
+  <header class="bg-primary text-white border-b border-secondary/30 shadow-md sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-lg bg-secondary text-white font-serif font-bold text-lg flex items-center justify-center shadow">
+          H
+        </div>
+        <div>
+          <h1 class="font-serif font-bold text-base leading-tight">Firebase Cloud Database Manager</h1>
+          <p class="text-xs text-secondary-light/80">HeritageConnect • Cloud Firestore Control Center</p>
+        </div>
+      </div>
+      
+      <div class="flex items-center gap-3">
+        <a href="exe.html" class="px-3.5 py-1.5 rounded-lg bg-white/10 hover:bg-secondary text-white text-xs font-semibold transition-all flex items-center gap-1.5 border border-white/20">
+          <span class="material-symbols-outlined text-[16px]">storefront</span>
+          <span>Open Marketplace App</span>
+        </a>
+        <div id="live-status-pill" class="px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1.5 bg-amber-500/20 text-amber-300 border border-amber-500/40">
+          <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+          <span id="live-status-text">Local / Placeholder Mode</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="max-w-7xl mx-auto px-4 py-8 flex-1 w-full space-y-8">
+
+    <!-- Step 1 to 3 Setup Quick Guide & Config Box -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      
+      <!-- Left: Step-by-Step Instructions -->
+      <div class="lg:col-span-5 bg-white border border-border rounded-2xl p-6 shadow-sm flex flex-col justify-between">
+        <div>
+          <div class="flex items-center gap-2 mb-3">
+            <span class="p-2 rounded-lg bg-secondary-light text-secondary-dark font-bold">
+              <span class="material-symbols-outlined">database</span>
+            </span>
+            <h2 class="font-serif font-bold text-lg text-primary">How to Setup Firebase in 3 Steps</h2>
+          </div>
+          
+          <ol class="space-y-4 text-xs text-gray-600 mt-4">
+            <li class="flex items-start gap-3">
+              <span class="w-6 h-6 rounded-full bg-primary text-white flex items-center justify-center font-bold shrink-0 text-[11px]">1</span>
+              <div>
+                <p class="font-bold text-gray-900">Create a Project in Firebase Console</p>
+                <p class="mt-0.5">Go to <a href="https://console.firebase.google.com/" target="_blank" class="text-secondary-dark font-semibold underline">console.firebase.google.com</a>, sign in with your Google account, and click <strong>"Add project"</strong> (e.g. <code>heritage-db</code>).</p>
+              </div>
+            </li>
+
+            <li class="flex items-start gap-3">
+              <span class="w-6 h-6 rounded-full bg-primary text-white flex items-center justify-center font-bold shrink-0 text-[11px]">2</span>
+              <div>
+                <p class="font-bold text-gray-900">Enable Cloud Firestore</p>
+                <p class="mt-0.5">In the left sidebar, click <strong>Build &gt; Firestore Database</strong>. Click <strong>"Create database"</strong>, choose your location (e.g. Mumbai <code>asia-south1</code>), and select <strong>"Start in test mode"</strong>.</p>
+              </div>
+            </li>
+
+            <li class="flex items-start gap-3">
+              <span class="w-6 h-6 rounded-full bg-primary text-white flex items-center justify-center font-bold shrink-0 text-[11px]">3</span>
+              <div>
+                <p class="font-bold text-gray-900">Register Web App &amp; Copy Config</p>
+                <p class="mt-0.5">In Project Settings (gear icon), scroll to <em>Your apps</em>, click <strong>Web (&lt;/&gt;)</strong>, register it, copy the <code>firebaseConfig</code> object, and paste it into the box on the right.</p>
+              </div>
+            </li>
+          </ol>
+        </div>
+
+        <div class="mt-6 pt-4 border-t border-border">
+          <div class="bg-surface-muted rounded-xl p-3 text-[11px] text-gray-600 flex items-start gap-2">
+            <span class="material-symbols-outlined text-secondary-dark text-[18px]">verified</span>
+            <div>
+              <p class="font-bold text-gray-900">Zero Node.js Required</p>
+              <p>Everything runs seamlessly in standard browser JavaScript via the official Google Firebase CDN.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Paste Config or Edit Credentials -->
+      <div class="lg:col-span-7 bg-white border border-border rounded-2xl p-6 shadow-sm">
+        <div class="flex items-center justify-between mb-4">
+          <div class="flex items-center gap-2">
+            <span class="p-2 rounded-lg bg-secondary-light text-secondary-dark font-bold">
+              <span class="material-symbols-outlined">key</span>
+            </span>
+            <h2 class="font-serif font-bold text-lg text-primary">Firebase Project Credentials</h2>
+          </div>
+          <button onclick="fillExampleConfig()" class="text-xs text-secondary-dark hover:underline font-semibold">
+            Paste Snippet Parser
+          </button>
+        </div>
+
+        <!-- Raw Paste Area (Auto-Parses full code snippet) -->
+        <div class="mb-4">
+          <label class="block text-xs font-bold text-gray-700 mb-1">
+            Fast Paste: Paste your <code>const firebaseConfig = { ... }</code> snippet here
+          </label>
+          <div class="relative">
+            <textarea id="raw-snippet-input" rows="3" placeholder='Paste your snippet here:&#10;const firebaseConfig = { apiKey: "AIza...", projectId: "...", ... };' class="w-full text-xs font-mono p-3 bg-surface-muted border border-border rounded-lg focus:border-secondary focus:outline-none"></textarea>
+            <button onclick="parseAndApplySnippet()" class="absolute bottom-2 right-2 px-3 py-1 rounded bg-secondary hover:bg-secondary-dark text-white text-[11px] font-bold shadow-sm transition-all">
+              Auto-Fill Below
+            </button>
+          </div>
+        </div>
+
+        <!-- Structured Fields -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+          <div>
+            <label class="font-bold text-gray-600 mb-1 block">API Key (apiKey)</label>
+            <input type="text" id="cfg-apiKey" class="w-full p-2 border border-border rounded-lg font-mono text-[11px]" placeholder="AIzaSy..."/>
+          </div>
+          <div>
+            <label class="font-bold text-gray-600 mb-1 block">Project ID (projectId)</label>
+            <input type="text" id="cfg-projectId" class="w-full p-2 border border-border rounded-lg font-mono text-[11px]" placeholder="heritage-connect-12345"/>
+          </div>
+          <div>
+            <label class="font-bold text-gray-600 mb-1 block">Auth Domain (authDomain)</label>
+            <input type="text" id="cfg-authDomain" class="w-full p-2 border border-border rounded-lg font-mono text-[11px]" placeholder="project-id.firebaseapp.com"/>
+          </div>
+          <div>
+            <label class="font-bold text-gray-600 mb-1 block">Storage Bucket (storageBucket)</label>
+            <input type="text" id="cfg-storageBucket" class="w-full p-2 border border-border rounded-lg font-mono text-[11px]" placeholder="project-id.appspot.com"/>
+          </div>
+          <div>
+            <label class="font-bold text-gray-600 mb-1 block">Messaging Sender ID</label>
+            <input type="text" id="cfg-senderId" class="w-full p-2 border border-border rounded-lg font-mono text-[11px]" placeholder="123456789012"/>
+          </div>
+          <div>
+            <label class="font-bold text-gray-600 mb-1 block">App ID (appId)</label>
+            <input type="text" id="cfg-appId" class="w-full p-2 border border-border rounded-lg font-mono text-[11px]" placeholder="1:123456789012:web:abcdef..."/>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex flex-wrap items-center justify-between gap-3 mt-5 pt-4 border-t border-border">
+          <div class="flex items-center gap-2">
+            <button onclick="saveConfigFromInputs()" class="px-4 py-2 rounded-lg bg-primary hover:bg-secondary text-white text-xs font-bold transition-all shadow-sm flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-[16px]">save</span>
+              <span>Save &amp; Connect</span>
+            </button>
+            <button onclick="testConnectionBtn()" class="px-4 py-2 rounded-lg border border-border bg-white hover:border-primary text-primary text-xs font-bold transition-all flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-[16px]">wifi_tethering</span>
+              <span>Test Connection</span>
+            </button>
+          </div>
+          <button onclick="clearAndResetConfig()" class="text-xs text-red-600 hover:underline">
+            Reset to Defaults
+          </button>
+        </div>
+
+        <div id="test-result-box" class="mt-3 hidden p-3 rounded-lg text-xs"></div>
+      </div>
+    </div>
+
+    <!-- 1-Click Database Seeding Bar -->
+    <div class="bg-gradient-to-r from-primary to-primary/95 text-white rounded-2xl p-6 sm:p-7 shadow-lg flex flex-col md:flex-row items-center justify-between gap-6 border border-secondary/30">
+      <div class="space-y-1 max-w-2xl">
+        <div class="flex items-center gap-2">
+          <span class="px-2.5 py-0.5 rounded-full bg-secondary text-white font-bold text-[10px] uppercase tracking-wider">
+            One-Click Setup
+          </span>
+          <span class="text-secondary-light text-xs font-serif italic">Populate Firestore Instantly</span>
+        </div>
+        <h3 class="font-serif text-2xl font-bold">Seed Indian Heritage Crafts into Firestore</h3>
+        <p class="text-xs text-white/80 leading-relaxed">
+          Instantly writes all 10 verified master handicraft items (Gorakhpur Terracotta, Srikalahasti Kalamkari, Jaipur Blue Pottery, Pochampally Ikat, etc.), master artisan profiles, and sample orders directly into your Cloud Firestore database collections.
+        </p>
+      </div>
+
+      <div class="shrink-0 flex flex-col items-center sm:items-end gap-2 w-full md:w-auto">
+        <button id="seed-btn" onclick="executeDatabaseSeed()" class="w-full sm:w-auto px-6 py-3 rounded-xl bg-secondary hover:bg-secondary-dark text-white font-bold text-sm shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2">
+          <span class="material-symbols-outlined text-[20px]">rocket_launch</span>
+          <span>Seed Database Now</span>
+        </button>
+        <span class="text-[11px] text-secondary-light/70 text-center sm:text-right">Safe to run multiple times (merges records)</span>
+      </div>
+    </div>
+
+    <!-- Live Seed Progress Logger -->
+    <div id="seed-progress-container" class="hidden bg-gray-900 text-green-400 font-mono text-xs rounded-xl p-4 shadow-inner border border-gray-700 space-y-1">
+      <div class="flex items-center justify-between pb-2 mb-2 border-b border-gray-800 text-gray-400">
+        <span class="font-bold flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+          Firestore Seeder Console Output
+        </span>
+        <button onclick="document.getElementById('seed-progress-container').classList.add('hidden')" class="hover:text-white">✕</button>
+      </div>
+      <div id="seed-logs" class="space-y-1 max-h-40 overflow-y-auto"></div>
+    </div>
+
+    <!-- Live Firestore Database Explorer -->
+    <div class="bg-white border border-border rounded-2xl p-6 shadow-sm">
+      
+      <!-- Tabs & Search -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-border">
+        <div>
+          <h2 class="font-serif font-bold text-xl text-primary flex items-center gap-2">
+            <span>Live Firestore Collections</span>
+            <span class="text-xs font-sans px-2.5 py-0.5 rounded-full bg-secondary-light text-secondary-dark font-bold" id="collection-badge">
+              products (10)
+            </span>
+          </h2>
+          <p class="text-xs text-gray-500 mt-0.5">Explore, inspect, and manipulate your live Cloud Firestore records in real time.</p>
+        </div>
+
+        <!-- Collection Switcher -->
+        <div class="flex items-center gap-2 bg-surface-muted p-1 rounded-xl border border-border text-xs">
+          <button id="tab-btn-products" onclick="switchCollectionTab('products')" class="px-3.5 py-1.5 rounded-lg bg-primary text-white font-bold transition-all shadow-sm">
+            Products Collection
+          </button>
+          <button id="tab-btn-artisans" onclick="switchCollectionTab('artisans')" class="px-3.5 py-1.5 rounded-lg text-gray-600 hover:text-primary font-semibold transition-all">
+            Artisans Collection
+          </button>
+          <button id="tab-btn-orders" onclick="switchCollectionTab('orders')" class="px-3.5 py-1.5 rounded-lg text-gray-600 hover:text-primary font-semibold transition-all">
+            Orders Collection
+          </button>
+        </div>
+      </div>
+
+      <!-- Action Sub-bar -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 py-4">
+        <div class="flex items-center gap-2">
+          <input type="text" id="filter-search-box" placeholder="Filter current view..." onkeyup="filterCurrentTable(this.value)" class="text-xs p-2 rounded-lg border border-border w-64 bg-surface focus:outline-none focus:border-secondary"/>
+          <button onclick="refreshCurrentView()" class="p-2 rounded-lg border border-border hover:bg-surface-muted text-gray-600" title="Refresh from Firestore">
+            <span class="material-symbols-outlined text-[17px]">refresh</span>
+          </button>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <button id="add-item-btn" onclick="openAddProductModal()" class="px-3.5 py-2 rounded-lg bg-secondary hover:bg-secondary-dark text-white text-xs font-bold transition-all flex items-center gap-1.5 shadow-sm">
+            <span class="material-symbols-outlined text-[16px]">add</span>
+            <span>Add New Product to Firestore</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- VIEW A: Products Table -->
+      <div id="view-products" class="overflow-x-auto">
+        <table class="w-full text-left text-xs border-collapse">
+          <thead>
+            <tr class="bg-surface-muted border-y border-border text-gray-600 font-bold uppercase text-[10px] tracking-wider">
+              <th class="p-3">Craft Artwork</th>
+              <th class="p-3">Category</th>
+              <th class="p-3">Artisan &amp; Origin</th>
+              <th class="p-3">Direct Price</th>
+              <th class="p-3">Stock</th>
+              <th class="p-3">Rating</th>
+              <th class="p-3 text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="products-table-body" class="divide-y divide-border">
+            <tr>
+              <td colspan="7" class="p-8 text-center text-gray-400">Loading products from Firestore...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- VIEW B: Artisans Table -->
+      <div id="view-artisans" class="hidden overflow-x-auto">
+        <table class="w-full text-left text-xs border-collapse">
+          <thead>
+            <tr class="bg-surface-muted border-y border-border text-gray-600 font-bold uppercase text-[10px] tracking-wider">
+              <th class="p-3">Master Artisan</th>
+              <th class="p-3">Craft Lineage</th>
+              <th class="p-3">Location</th>
+              <th class="p-3">Apprentice Guild</th>
+              <th class="p-3">Direct Payout Rate</th>
+            </tr>
+          </thead>
+          <tbody id="artisans-table-body" class="divide-y divide-border">
+            <tr>
+              <td colspan="5" class="p-8 text-center text-gray-400">Loading artisans...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- VIEW C: Live Orders Feed Table -->
+      <div id="view-orders" class="hidden overflow-x-auto">
+        <div class="mb-3 p-3 bg-secondary-light/60 border border-secondary/30 rounded-xl flex items-center justify-between text-xs text-secondary-dark font-medium">
+          <span class="flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-[18px]">bolt</span>
+            <span>Real-time Order Stream: New orders submitted in checkout will appear here instantly.</span>
+          </span>
+          <button onclick="createSimulatedOrder()" class="px-2.5 py-1 bg-primary text-white rounded text-[11px] font-bold hover:bg-secondary transition-all">
+            + Simulate Test Order
+          </button>
+        </div>
+        <table class="w-full text-left text-xs border-collapse">
+          <thead>
+            <tr class="bg-surface-muted border-y border-border text-gray-600 font-bold uppercase text-[10px] tracking-wider">
+              <th class="p-3">Order ID</th>
+              <th class="p-3">Customer</th>
+              <th class="p-3">Items Purchased</th>
+              <th class="p-3">Total Paid</th>
+              <th class="p-3">Artisan Payout (94%)</th>
+              <th class="p-3">Status</th>
+              <th class="p-3">Timestamp</th>
+            </tr>
+          </thead>
+          <tbody id="orders-table-body" class="divide-y divide-border">
+            <tr>
+              <td colspan="7" class="p-8 text-center text-gray-400">Loading orders...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+
+    <!-- Firestore Security Rules Reference Card -->
+    <div class="bg-white border border-border rounded-2xl p-6 shadow-sm">
+      <div class="flex items-center justify-between mb-3">
+        <div class="flex items-center gap-2">
+          <span class="p-2 rounded-lg bg-secondary-light text-secondary-dark font-bold">
+            <span class="material-symbols-outlined">security</span>
+          </span>
+          <h3 class="font-serif font-bold text-base text-primary">Recommended Firestore Security Rules</h3>
+        </div>
+        <button onclick="copySecurityRules()" class="px-3 py-1 rounded border border-border hover:bg-surface-muted text-xs font-semibold flex items-center gap-1 text-primary">
+          <span class="material-symbols-outlined text-[15px]">content_copy</span>
+          <span>Copy Rules</span>
+        </button>
+      </div>
+      <p class="text-xs text-gray-600 mb-3">
+        In the Firebase Console under <strong>Firestore Database &gt; Rules</strong>, paste these rules to allow public product browsing and order placement while securing administrative writes:
+      </p>
+      <pre id="security-rules-text" class="bg-gray-900 text-gray-200 font-mono text-xs p-4 rounded-xl overflow-x-auto leading-relaxed">
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Products: anyone can read, anyone can write in dev test mode
+    match /products/{productId} {
+      allow read: if true;
+      allow write: if true; // In production: if request.auth != null
+    }
+    
+    // Artisans: public profiles
+    match /artisans/{artisanId} {
+      allow read: if true;
+      allow write: if true;
+    }
+    
+    // Orders: customers can create orders, read their own
+    match /orders/{orderId} {
+      allow create: if true;
+      allow read: if true;
+      allow update, delete: if false;
+    }
+  }
+}</pre>
+    </div>
+
+  </main>
+
+  <!-- Modal: Add New Product Form -->
+  <div id="add-product-modal" class="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4 hidden">
+    <div class="bg-white border border-border rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto shadow-2xl p-6 relative">
+      <button onclick="closeAddProductModal()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-surface-muted hover:bg-border text-primary flex items-center justify-center text-sm font-bold">
+        ✕
+      </button>
+
+      <div class="flex items-center gap-2 mb-4">
+        <span class="p-2 rounded-lg bg-secondary-light text-secondary-dark font-bold">
+          <span class="material-symbols-outlined">add_circle</span>
+        </span>
+        <h3 class="font-serif font-bold text-lg text-primary">Add New Craft to Firestore</h3>
+      </div>
+
+      <form id="add-product-form" onsubmit="handleProductSubmit(event)" class="space-y-3 text-xs">
+        <div>
+          <label class="font-bold text-gray-700 block mb-1">Craft Title</label>
+          <input type="text" id="new-prod-title" required placeholder="e.g. Handmade Bidriware Silver Coaster" class="w-full p-2.5 border border-border rounded-lg"/>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="font-bold text-gray-700 block mb-1">Direct Price (₹)</label>
+            <input type="number" id="new-prod-price" required placeholder="850" class="w-full p-2.5 border border-border rounded-lg"/>
+          </div>
+          <div>
+            <label class="font-bold text-gray-700 block mb-1">Retail Comparison (₹)</label>
+            <input type="text" id="new-prod-retail" required placeholder="₹1,700 retail" class="w-full p-2.5 border border-border rounded-lg"/>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="font-bold text-gray-700 block mb-1">Artisan &amp; Location</label>
+            <input type="text" id="new-prod-artist" required placeholder="Master Rashid • Bidar, Karnataka" class="w-full p-2.5 border border-border rounded-lg"/>
+          </div>
+          <div>
+            <label class="font-bold text-gray-700 block mb-1">Craft Form / Category</label>
+            <select id="new-prod-category" class="w-full p-2.5 border border-border rounded-lg bg-white">
+              <option value="pottery">Pottery &amp; Terracotta</option>
+              <option value="paintings">Paintings &amp; Scrolls</option>
+              <option value="toys">Wood Toys &amp; Carvings</option>
+              <option value="metal">Metal &amp; Bell Brass</option>
+              <option value="textiles">Handloom Textiles</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="font-bold text-gray-700 block mb-1">Origin / State</label>
+            <input type="text" id="new-prod-origin" required placeholder="Bidar, Karnataka" class="w-full p-2.5 border border-border rounded-lg"/>
+          </div>
+          <div>
+            <label class="font-bold text-gray-700 block mb-1">Crafting Time</label>
+            <input type="text" id="new-prod-time" required placeholder="3 Days" class="w-full p-2.5 border border-border rounded-lg"/>
+          </div>
+        </div>
+
+        <div>
+          <label class="font-bold text-gray-700 block mb-1">Image URL</label>
+          <input type="url" id="new-prod-img" required placeholder="https://images.unsplash.com/..." value="https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?auto=format&fit=crop&w=600&q=80" class="w-full p-2.5 border border-border rounded-lg"/>
+        </div>
+
+        <div>
+          <label class="font-bold text-gray-700 block mb-1">Artisan Story &amp; Description</label>
+          <textarea id="new-prod-desc" required rows="3" placeholder="Describe the materials, traditional techniques, and natural dyes used..." class="w-full p-2.5 border border-border rounded-lg"></textarea>
+        </div>
+
+        <div class="pt-3 flex items-center justify-end gap-2 border-t border-border">
+          <button type="button" onclick="closeAddProductModal()" class="px-4 py-2 rounded-lg border border-border text-gray-600 font-semibold hover:bg-surface-muted">
+            Cancel
+          </button>
+          <button type="submit" id="save-prod-btn" class="px-5 py-2 rounded-lg bg-primary hover:bg-secondary text-white font-bold transition-all shadow-sm flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-[16px]">cloud_upload</span>
+            <span>Upload to Firestore</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-primary text-white/70 py-6 px-4 border-t border-secondary/20 text-xs mt-auto">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-2">
+        <span class="w-6 h-6 rounded bg-secondary text-white font-serif font-bold text-xs flex items-center justify-center">H</span>
+        <span>HeritageConnect Firebase Control Panel &bull; Cloud Firestore</span>
+      </div>
+      <div>
+        <a href="exe.html" class="text-secondary-light hover:underline font-semibold">View Live Storefront &rarr;</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Page Interaction Logic -->
+  <script>
+    let currentTab = 'products';
+    let cachedProducts = [];
+    let cachedArtisans = [];
+    let cachedOrders = [];
+
+    // On Load
+    window.addEventListener('DOMContentLoaded', () => {
+      populateConfigInputs();
+      updateStatusDisplay();
+      initRealtimeSubscriptions();
+    });
+
+    function populateConfigInputs() {
+      const cfg = window.FIREBASE_CONFIG || {};
+      document.getElementById('cfg-apiKey').value = cfg.apiKey || '';
+      document.getElementById('cfg-projectId').value = cfg.projectId || '';
+      document.getElementById('cfg-authDomain').value = cfg.authDomain || '';
+      document.getElementById('cfg-storageBucket').value = cfg.storageBucket || '';
+      document.getElementById('cfg-senderId').value = cfg.messagingSenderId || '';
+      document.getElementById('cfg-appId').value = cfg.appId || '';
+    }
+
+    function updateStatusDisplay() {
+      const pill = document.getElementById('live-status-pill');
+      const text = document.getElementById('live-status-text');
+      const isSet = window.isFirebaseConfigSet();
+
+      if (isSet) {
+        pill.className = "px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1.5 bg-green-500/20 text-green-300 border border-green-500/40";
+        text.textContent = `Firestore: ${window.FIREBASE_CONFIG.projectId}`;
+      } else {
+        pill.className = "px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1.5 bg-amber-500/20 text-amber-300 border border-amber-500/40";
+        text.textContent = "Demo / Standby Mode";
+      }
+    }
+
+    function fillExampleConfig() {
+      document.getElementById('raw-snippet-input').value = `const firebaseConfig = {
+  apiKey: "AIzaSyYOUR_REAL_API_KEY",
+  authDomain: "heritage-crafts.firebaseapp.com",
+  projectId: "heritage-crafts",
+  storageBucket: "heritage-crafts.appspot.com",
+  messagingSenderId: "123456789012",
+  appId: "1:123456789012:web:abcdef123456"
+};`;
+    }
+
+    // Snippet parser
+    function parseAndApplySnippet() {
+      const text = document.getElementById('raw-snippet-input').value.trim();
+      if (!text) {
+        alert("Please paste your firebaseConfig snippet first.");
+        return;
+      }
+
+      try {
+        const apiKey = (text.match(/apiKey:\s*["']([^"']+)["']/) || [])[1];
+        const projectId = (text.match(/projectId:\s*["']([^"']+)["']/) || [])[1];
+        const authDomain = (text.match(/authDomain:\s*["']([^"']+)["']/) || [])[1];
+        const storageBucket = (text.match(/storageBucket:\s*["']([^"']+)["']/) || [])[1];
+        const messagingSenderId = (text.match(/messagingSenderId:\s*["']([^"']+)["']/) || [])[1];
+        const appId = (text.match(/appId:\s*["']([^"']+)["']/) || [])[1];
+
+        if (apiKey) document.getElementById('cfg-apiKey').value = apiKey;
+        if (projectId) document.getElementById('cfg-projectId').value = projectId;
+        if (authDomain) document.getElementById('cfg-authDomain').value = authDomain;
+        if (storageBucket) document.getElementById('cfg-storageBucket').value = storageBucket;
+        if (messagingSenderId) document.getElementById('cfg-senderId').value = messagingSenderId;
+        if (appId) document.getElementById('cfg-appId').value = appId;
+
+        saveConfigFromInputs();
+        alert("Configuration detected and populated! Click 'Test Connection' to verify.");
+      } catch (err) {
+        alert("Failed to parse snippet automatically. Please copy the values into the fields below directly.");
+      }
+    }
+
+    function saveConfigFromInputs() {
+      const newConfig = {
+        apiKey: document.getElementById('cfg-apiKey').value.trim(),
+        projectId: document.getElementById('cfg-projectId').value.trim(),
+        authDomain: document.getElementById('cfg-authDomain').value.trim(),
+        storageBucket: document.getElementById('cfg-storageBucket').value.trim(),
+        messagingSenderId: document.getElementById('cfg-senderId').value.trim(),
+        appId: document.getElementById('cfg-appId').value.trim()
+      };
+
+      window.saveFirebaseConfig(newConfig);
+      updateStatusDisplay();
+
+      // Re-init service
+      window.HeritageDB.init();
+      testConnectionBtn();
+    }
+
+    function clearAndResetConfig() {
+      if (confirm("Reset to default demonstration settings?")) {
+        window.resetFirebaseConfig();
+        populateConfigInputs();
+        updateStatusDisplay();
+        window.location.reload();
+      }
+    }
+
+    async function testConnectionBtn() {
+      const resultBox = document.getElementById('test-result-box');
+      resultBox.classList.remove('hidden');
+      resultBox.className = "mt-3 p-3 rounded-lg text-xs bg-blue-50 text-blue-800 border border-blue-200 flex items-center gap-2";
+      resultBox.innerHTML = '<span class="material-symbols-outlined animate-spin text-[16px]">sync</span> Connecting to Google Cloud Firestore...';
+
+      const res = await window.HeritageDB.testConnection();
+
+      if (res.success) {
+        resultBox.className = "mt-3 p-3 rounded-lg text-xs bg-green-50 text-green-800 border border-green-200 flex items-center gap-2";
+        resultBox.innerHTML = `<span class="material-symbols-outlined text-[18px]">check_circle</span> <strong>Success!</strong> ${res.message}`;
+      } else {
+        resultBox.className = "mt-3 p-3 rounded-lg text-xs bg-red-50 text-red-800 border border-red-200 flex items-center gap-2";
+        resultBox.innerHTML = `<span class="material-symbols-outlined text-[18px]">error</span> <strong>Connection issue:</strong> ${res.message}`;
+      }
+    }
+
+    // Execute Seeding
+    async function executeDatabaseSeed() {
+      const btn = document.getElementById('seed-btn');
+      const progressBox = document.getElementById('seed-progress-container');
+      const logs = document.getElementById('seed-logs');
+
+      progressBox.classList.remove('hidden');
+      logs.innerHTML = '';
+      btn.disabled = true;
+      btn.innerHTML = '<span class="material-symbols-outlined animate-spin text-[20px]">sync</span> <span>Writing to Firestore...</span>';
+
+      const log = (msg) => {
+        const line = document.createElement('div');
+        line.textContent = `> ${msg}`;
+        logs.appendChild(line);
+        logs.scrollTop = logs.scrollHeight;
+      };
+
+      try {
+        await window.HeritageDB.seedDatabase(log);
+        log("Database is ready! Refreshing views...");
+        btn.innerHTML = '<span class="material-symbols-outlined text-[20px]">check</span> <span>Seeding Complete!</span>';
+        setTimeout(() => {
+          btn.disabled = false;
+          btn.innerHTML = '<span class="material-symbols-outlined text-[20px]">rocket_launch</span> <span>Seed Database Again</span>';
+        }, 3000);
+      } catch (err) {
+        log(`ERROR: ${err.message}`);
+        btn.disabled = false;
+        btn.innerHTML = '<span class="material-symbols-outlined text-[20px]">error</span> <span>Retry Seeding</span>';
+      }
+    }
+
+    // Subscriptions
+    function initRealtimeSubscriptions() {
+      // Products
+      window.HeritageDB.subscribeProducts((products) => {
+        cachedProducts = products;
+        renderProductsTable(products);
+      });
+
+      // Orders
+      window.HeritageDB.subscribeOrders((orders) => {
+        cachedOrders = orders;
+        renderOrdersTable(orders);
+      });
+
+      // Artisans
+      window.HeritageDB.getArtisans().then(artisans => {
+        cachedArtisans = artisans;
+        renderArtisansTable(artisans);
+      });
+    }
+
+    function renderProductsTable(products) {
+      const tbody = document.getElementById('products-table-body');
+      document.getElementById('collection-badge').textContent = `products (${products.length})`;
+      tbody.innerHTML = '';
+
+      if (products.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" class="p-8 text-center text-gray-400">No products found. Click "Seed Database Now" to load 10 crafts!</td></tr>';
+        return;
+      }
+
+      products.forEach(p => {
+        const tr = document.createElement('tr');
+        tr.className = "hover:bg-surface-muted/50 transition-colors";
+        tr.innerHTML = `
+          <td class="p-3">
+            <div class="flex items-center gap-3">
+              <img src="${p.img}" class="w-10 h-10 object-cover rounded-lg border border-border shrink-0"/>
+              <div>
+                <p class="font-bold text-gray-900">${p.title}</p>
+                <p class="text-[11px] text-gray-500">${p.craft || 'Handicraft'}</p>
+              </div>
+            </div>
+          </td>
+          <td class="p-3">
+            <span class="px-2 py-0.5 rounded bg-surface-muted text-gray-700 font-medium text-[11px] capitalize">${p.category}</span>
+          </td>
+          <td class="p-3">
+            <p class="font-medium text-gray-800">${p.artist}</p>
+            <p class="text-[11px] text-gray-500">${p.origin}</p>
+          </td>
+          <td class="p-3 font-serif font-bold text-gray-900">₹${p.price.toLocaleString('en-IN')}</td>
+          <td class="p-3">
+            <span class="px-2 py-0.5 rounded bg-green-50 text-green-700 font-bold text-[11px]">${p.stock || 15} in stock</span>
+          </td>
+          <td class="p-3 text-secondary-dark font-bold">⭐ ${p.rating || 5.0}</td>
+          <td class="p-3 text-right">
+            <button onclick="deleteProductItem('${p.id}')" class="text-red-500 hover:text-red-700 font-medium p-1 hover:bg-red-50 rounded" title="Delete from Firestore">
+              <span class="material-symbols-outlined text-[16px]">delete</span>
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function renderArtisansTable(artisans) {
+      const tbody = document.getElementById('artisans-table-body');
+      tbody.innerHTML = '';
+      artisans.forEach(a => {
+        const tr = document.createElement('tr');
+        tr.className = "hover:bg-surface-muted/50 transition-colors";
+        tr.innerHTML = `
+          <td class="p-3">
+            <div class="flex items-center gap-3">
+              <img src="${a.avatar}" class="w-9 h-9 object-cover rounded-full border border-secondary shrink-0"/>
+              <div>
+                <p class="font-bold text-gray-900">${a.name}</p>
+                <p class="text-[11px] text-gray-500">Active since ${a.activeSince || '1985'}</p>
+              </div>
+            </div>
+          </td>
+          <td class="p-3 font-medium text-gray-800">${a.lineage}</td>
+          <td class="p-3 text-gray-600">${a.location}</td>
+          <td class="p-3 text-gray-600">${a.apprenticeFamilies || 10} Families Supported</td>
+          <td class="p-3">
+            <span class="px-2 py-0.5 rounded bg-green-50 text-green-800 font-bold text-[11px]">94% Direct Payout</span>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function renderOrdersTable(orders) {
+      const tbody = document.getElementById('orders-table-body');
+      tbody.innerHTML = '';
+      if (orders.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" class="p-8 text-center text-gray-400">No orders yet. Place an order on the marketplace or click "Simulate Test Order".</td></tr>';
+        return;
+      }
+
+      orders.forEach(o => {
+        const tr = document.createElement('tr');
+        tr.className = "hover:bg-surface-muted/50 transition-colors";
+        const dateStr = o.createdAt ? new Date(o.createdAt).toLocaleString('en-IN') : 'Just now';
+        const itemsSummary = (o.items || []).map(i => `${i.name} (₹${i.price})`).join(', ') || '1x Handcrafted Item';
+
+        tr.innerHTML = `
+          <td class="p-3 font-mono font-bold text-secondary-dark">${o.orderId || o.id}</td>
+          <td class="p-3">
+            <p class="font-bold text-gray-900">${o.customerName}</p>
+            <p class="text-[11px] text-gray-500">${o.customerLocation || o.customerEmail}</p>
+          </td>
+          <td class="p-3 text-gray-700 max-w-xs truncate" title="${itemsSummary}">${itemsSummary}</td>
+          <td class="p-3 font-serif font-bold text-gray-900">₹${(o.totalAmount || 0).toLocaleString('en-IN')}</td>
+          <td class="p-3 font-serif font-bold text-green-700">₹${(o.artisanPayout || 0).toLocaleString('en-IN')}</td>
+          <td class="p-3">
+            <span class="px-2 py-0.5 rounded bg-green-100 text-green-800 font-bold text-[10px] uppercase">${o.status || 'Confirmed'}</span>
+          </td>
+          <td class="p-3 text-gray-500 text-[11px]">${dateStr}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // Tab switcher
+    function switchCollectionTab(tab) {
+      currentTab = tab;
+      document.getElementById('view-products').classList.add('hidden');
+      document.getElementById('view-artisans').classList.add('hidden');
+      document.getElementById('view-orders').classList.add('hidden');
+
+      ['products', 'artisans', 'orders'].forEach(t => {
+        const btn = document.getElementById(`tab-btn-${t}`);
+        btn.className = "px-3.5 py-1.5 rounded-lg text-gray-600 hover:text-primary font-semibold transition-all";
+      });
+
+      const activeBtn = document.getElementById(`tab-btn-${tab}`);
+      activeBtn.className = "px-3.5 py-1.5 rounded-lg bg-primary text-white font-bold transition-all shadow-sm";
+
+      const addBtn = document.getElementById('add-item-btn');
+
+      if (tab === 'products') {
+        document.getElementById('view-products').classList.remove('hidden');
+        document.getElementById('collection-badge').textContent = `products (${cachedProducts.length})`;
+        addBtn.classList.remove('hidden');
+      } else if (tab === 'artisans') {
+        document.getElementById('view-artisans').classList.remove('hidden');
+        document.getElementById('collection-badge').textContent = `artisans (${cachedArtisans.length})`;
+        addBtn.classList.add('hidden');
+      } else if (tab === 'orders') {
+        document.getElementById('view-orders').classList.remove('hidden');
+        document.getElementById('collection-badge').textContent = `orders (${cachedOrders.length})`;
+        addBtn.classList.add('hidden');
+      }
+    }
+
+    // Modal
+    function openAddProductModal() {
+      document.getElementById('add-product-modal').classList.remove('hidden');
+    }
+
+    function closeAddProductModal() {
+      document.getElementById('add-product-modal').classList.add('hidden');
+    }
+
+    async function handleProductSubmit(e) {
+      e.preventDefault();
+      const saveBtn = document.getElementById('save-prod-btn');
+      saveBtn.disabled = true;
+      saveBtn.innerHTML = '<span class="material-symbols-outlined animate-spin text-[16px]">sync</span> Saving...';
+
+      const newProd = {
+        title: document.getElementById('new-prod-title').value.trim(),
+        price: parseInt(document.getElementById('new-prod-price').value),
+        retail: document.getElementById('new-prod-retail').value.trim(),
+        artist: document.getElementById('new-prod-artist').value.trim(),
+        category: document.getElementById('new-prod-category').value,
+        origin: document.getElementById('new-prod-origin').value.trim(),
+        time: document.getElementById('new-prod-time').value.trim(),
+        img: document.getElementById('new-prod-img').value.trim(),
+        desc: document.getElementById('new-prod-desc').value.trim(),
+        stock: 20,
+        rating: 5.0,
+        artisanSharePercentage: 94
+      };
+
+      try {
+        await window.HeritageDB.addProduct(newProd);
+        alert(`Successfully uploaded "${newProd.title}" to Firestore!`);
+        closeAddProductModal();
+        document.getElementById('add-product-form').reset();
+      } catch (err) {
+        alert("Upload error: " + err.message);
+      } finally {
+        saveBtn.disabled = false;
+        saveBtn.innerHTML = '<span class="material-symbols-outlined text-[16px]">cloud_upload</span> <span>Upload to Firestore</span>';
+      }
+    }
+
+    async function deleteProductItem(id) {
+      if (confirm("Delete this product document from Cloud Firestore?")) {
+        try {
+          await window.HeritageDB.deleteProduct(id);
+        } catch (err) {
+          alert("Delete error: " + err.message);
+        }
+      }
+    }
+
+    async function createSimulatedOrder() {
+      const sampleItem = cachedProducts[Math.floor(Math.random() * cachedProducts.length)] || {
+        title: "Terracotta Incense & Diya Set",
+        price: 450
+      };
+      const order = await window.HeritageDB.createOrder({
+        customerName: "Priya Sundaram",
+        customerEmail: "priya@example.com",
+        customerLocation: "Hyderabad, Telangana",
+        items: [{ name: sampleItem.title, price: sampleItem.price, qty: 1 }],
+        totalAmount: sampleItem.price
+      });
+      alert(`Test Order #${order.orderId} created in Firestore!`);
+    }
+
+    function filterCurrentTable(query) {
+      const q = query.toLowerCase();
+      if (currentTab === 'products') {
+        const filtered = cachedProducts.filter(p => 
+          (p.title || '').toLowerCase().includes(q) || 
+          (p.artist || '').toLowerCase().includes(q) ||
+          (p.origin || '').toLowerCase().includes(q)
+        );
+        renderProductsTable(filtered);
+      } else if (currentTab === 'orders') {
+        const filtered = cachedOrders.filter(o =>
+          (o.orderId || '').toLowerCase().includes(q) ||
+          (o.customerName || '').toLowerCase().includes(q)
+        );
+        renderOrdersTable(filtered);
+      }
+    }
+
+    function refreshCurrentView() {
+      initRealtimeSubscriptions();
+    }
+
+    function copySecurityRules() {
+      const text = document.getElementById('security-rules-text').innerText;
+      navigator.clipboard.writeText(text);
+      alert("Firestore Security Rules copied to clipboard!");
+    }
+  </script>
+</body>
+</html>
