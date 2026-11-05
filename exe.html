@@ -98,7 +98,10 @@
 <button class="px-3 py-1 rounded bg-white/10 hover:bg-secondary text-white font-medium transition-all" id="tab-portal" onclick="showScreen('screen-portal')">
            Artisan Studio
         </button>
-
+<a href="login.html" class="px-3 py-1 rounded bg-secondary-light/20 hover:bg-secondary text-white font-semibold transition-all flex items-center gap-1" id="tab-login-nav" title="User Sign In / Account">
+  <span class="material-symbols-outlined text-[15px]">account_circle</span>
+  <span id="nav-user-label">Sign In</span>
+</a>
 </nav>
 <div class="hidden lg:flex items-center gap-1.5 text-secondary pl-3 border-l border-white/20 whitespace-nowrap">
 <span class="material-symbols-outlined text-[16px]">info</span>
@@ -169,6 +172,10 @@
 <a href="firebase-manager.html" target="_blank" class="text-xs px-3 py-1.5 font-bold bg-secondary hover:bg-secondary-dark text-white rounded transition-all flex items-center gap-1 shadow-sm" id="nav-btn-firebase" title="Open Cloud Firestore Database Control Panel">
   <span class="material-symbols-outlined text-[15px]">database</span>
   <span>Firebase DB</span>
+</a>
+<a href="login.html" class="text-xs px-3 py-1.5 font-bold border border-primary text-primary hover:bg-primary hover:text-white rounded transition-all flex items-center gap-1 shadow-xs ml-1" id="main-nav-login" title="User Login">
+  <span class="material-symbols-outlined text-[15px]">account_circle</span>
+  <span id="main-user-label">Sign In</span>
 </a>
 </div>
 </div>
@@ -261,6 +268,29 @@
 <p class="text-xs text-text-muted mt-1">94% of your payment is credited directly into artisan cooperative accounts.</p>
 </div>
 </div>
+
+      <!-- PERSONALIZED USER LOGIN STATUS BANNER -->
+      <div id="user-greeting-banner" class="mb-8 p-4 rounded-2xl border border-secondary/30 bg-gradient-to-r from-secondary-light/60 via-white to-surface-muted flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-xs craft-shadow">
+        <div class="flex items-center gap-3.5">
+          <img id="greeting-avatar-img" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80" class="hidden w-11 h-11 rounded-full object-cover border-2 border-secondary shrink-0 shadow-xs"/>
+          <div id="greeting-icon-placeholder" class="w-11 h-11 rounded-xl bg-secondary text-white flex items-center justify-center shrink-0 shadow-xs">
+            <span class="material-symbols-outlined text-2xl">account_circle</span>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="font-serif font-bold text-base text-primary" id="greeting-user-title">Welcome to HeritageConnect!</span>
+              <span id="greeting-role-badge" class="hidden px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-secondary text-white">Patron</span>
+            </div>
+            <p class="text-text-muted mt-0.5" id="greeting-user-desc">Connect directly with 1,480+ village master artisans and track deliveries in real time.</p>
+          </div>
+        </div>
+        <div id="greeting-action-area" class="flex items-center gap-2 shrink-0">
+          <a href="login.html" id="greeting-login-link" class="px-4 py-2 rounded-xl bg-primary hover:bg-secondary text-white font-bold transition-all text-xs shadow-xs flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-[16px]">login</span>
+            <span>Sign In / Create Account</span>
+          </a>
+        </div>
+      </div>
 <!-- PRICE & CATEGORY FILTER BAR -->
 <div class="bg-white border border-border rounded-xl p-4 mb-8 shadow-sm">
 <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
@@ -1623,6 +1653,78 @@
   </div>
 </div>
 
+<!-- ========================================================================= -->
+<!-- 9. USER ACCOUNT PROFILE POPOVER / DROPDOWN                                 -->
+<!-- ========================================================================= -->
+<div id="user-profile-dropdown" class="fixed right-4 sm:right-10 top-16 z-50 bg-white border border-border rounded-2xl shadow-2xl p-4 w-72 hidden">
+  <div class="flex items-center gap-3 pb-3 border-b border-border">
+    <img id="dropdown-user-avatar" src="" alt="User" class="w-11 h-11 rounded-full object-cover border-2 border-secondary shrink-0"/>
+    <div class="min-w-0 flex-1">
+      <p class="font-bold text-sm text-primary truncate" id="dropdown-user-name">User Name</p>
+      <span id="dropdown-user-role" class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-secondary-light text-secondary-dark inline-block mt-0.5">Patron</span>
+      <p class="text-[11px] text-gray-500 truncate mt-0.5" id="dropdown-user-email">user@example.com</p>
+    </div>
+  </div>
+
+  <div class="py-2.5 space-y-1 text-xs">
+    <button onclick="openMyOrdersModal(); toggleUserDropdown();" class="w-full text-left p-2 rounded-xl hover:bg-surface-muted text-gray-700 font-semibold flex items-center justify-between transition-colors">
+      <span class="flex items-center gap-2">
+        <span class="material-symbols-outlined text-[18px] text-secondary">local_shipping</span>
+        <span>My Orders &amp; Deliveries</span>
+      </span>
+      <span class="px-1.5 py-0.2 rounded-full bg-green-100 text-green-800 text-[10px] font-bold" id="dropdown-order-count">6</span>
+    </button>
+    <button onclick="showScreen('screen-portal'); toggleUserDropdown();" class="w-full text-left p-2 rounded-xl hover:bg-surface-muted text-gray-700 font-semibold flex items-center gap-2 transition-colors">
+      <span class="material-symbols-outlined text-[18px] text-secondary">palette</span>
+      <span>Artisan Workshop Studio</span>
+    </button>
+    <a href="firebase-manager.html" target="_blank" class="p-2 rounded-xl hover:bg-surface-muted text-gray-700 font-semibold flex items-center gap-2 transition-colors">
+      <span class="material-symbols-outlined text-[18px] text-secondary">database</span>
+      <span>Firestore Database Manager</span>
+    </a>
+  </div>
+
+  <div class="pt-2.5 border-t border-border">
+    <button onclick="handleUserSignOut()" class="w-full py-2 rounded-xl bg-red-50 hover:bg-red-100 text-red-700 font-bold text-xs transition-all flex items-center justify-center gap-1.5">
+      <span class="material-symbols-outlined text-[16px]">logout</span>
+      <span>Sign Out</span>
+    </button>
+  </div>
+</div>
+
+<!-- ========================================================================= -->
+<!-- 10. MY ORDERS & DELIVERY TRACKING MODAL                                   -->
+<!-- ========================================================================= -->
+<div class="fixed inset-0 z-50 bg-black/65 backdrop-blur-xs flex items-center justify-center p-4 hidden" id="my-orders-modal">
+  <div class="bg-white border border-border rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl relative p-6">
+    <button onclick="closeMyOrdersModal()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-surface-muted hover:bg-border text-primary flex items-center justify-center text-sm font-bold">
+      ✕
+    </button>
+
+    <div class="flex items-center gap-3 pb-3 border-b border-border mb-4">
+      <div class="w-10 h-10 rounded-xl bg-secondary-light text-secondary-dark flex items-center justify-center">
+        <span class="material-symbols-outlined text-2xl">local_shipping</span>
+      </div>
+      <div>
+        <h3 class="font-serif font-bold text-lg text-primary">My Handcrafted Orders &amp; Deliveries</h3>
+        <p class="text-xs text-text-muted" id="my-orders-modal-subtitle">Track live delivery status directly from artisan villages.</p>
+      </div>
+    </div>
+
+    <!-- Live Deliveries List Container -->
+    <div id="my-orders-list-container" class="space-y-3 text-xs">
+      <!-- Populated dynamically via JS -->
+    </div>
+
+    <div class="mt-5 pt-3 border-t border-border flex items-center justify-between text-xs text-text-muted">
+      <span>Certified Geographical Indication (GI) Delivery</span>
+      <button onclick="closeMyOrdersModal()" class="px-4 py-1.5 rounded-lg bg-primary text-white font-bold hover:bg-secondary transition-all">
+        Close
+      </button>
+    </div>
+  </div>
+</div>
+
 <footer class="bg-primary text-white/80 py-8 px-4 border-t border-border mt-auto text-xs">
 <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
 <div class="flex items-center gap-2">
@@ -1861,13 +1963,21 @@
       const itemsList = [...cart];
       let orderId = "HC-GI-" + Math.floor(10000 + Math.random() * 90000);
 
+      // Automatically attribute order to logged-in user
+      const currentUser = getActiveUser();
+      const customerName = currentUser ? currentUser.name : "Patron Craft Connoisseur";
+      const customerEmail = currentUser ? currentUser.email : "patron@heritageconnect.org";
+      const customerLocation = currentUser ? 
+        (currentUser.role === 'artisan' ? "Srikalahasti, AP" : "Bengaluru, Karnataka") : 
+        "New Delhi, India";
+
       // Save order to Firebase Cloud Firestore
       if (window.HeritageDB) {
         try {
           const savedOrder = await window.HeritageDB.createOrder({
-            customerName: "Patron Craft Connoisseur",
-            customerEmail: "patron@heritageconnect.org",
-            customerLocation: "New Delhi, India",
+            customerName,
+            customerEmail,
+            customerLocation,
             items: itemsList,
             totalAmount: total
           });
@@ -2493,8 +2603,192 @@
       alert(`🎉 Photo & Craft Published Live!\n\n"${title}" (₹${price.toLocaleString('en-IN')}) is now live on the HeritageConnect marketplace for buyers.`);
     }
 
+    // Get Active Logged-in User
+    function getActiveUser() {
+      try {
+        const raw = localStorage.getItem('HERITAGE_LOGGED_IN_USER');
+        return raw ? JSON.parse(raw) : null;
+      } catch (e) {
+        return null;
+      }
+    }
+
+    // Toggle User Profile Dropdown Popover
+    function toggleUserDropdown() {
+      const dropdown = document.getElementById('user-profile-dropdown');
+      if (dropdown) {
+        dropdown.classList.toggle('hidden');
+      }
+    }
+
+    // Close Dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+      const dropdown = document.getElementById('user-profile-dropdown');
+      const navBtn = document.getElementById('tab-login-nav');
+      const mainBtn = document.getElementById('main-nav-login');
+      if (dropdown && !dropdown.classList.contains('hidden')) {
+        if (!dropdown.contains(e.target) && !navBtn.contains(e.target) && !mainBtn.contains(e.target)) {
+          dropdown.classList.add('hidden');
+        }
+      }
+    });
+
+    // Sign Out Handler
+    function handleUserSignOut() {
+      localStorage.removeItem('HERITAGE_LOGGED_IN_USER');
+      alert("You have been signed out successfully.");
+      window.location.href = "exe.html";
+    }
+
+    // Open/Close My Orders Modal
+    function openMyOrdersModal() {
+      const user = getActiveUser();
+      const modal = document.getElementById('my-orders-modal');
+      const container = document.getElementById('my-orders-list-container');
+      const subtitle = document.getElementById('my-orders-modal-subtitle');
+      if (!modal || !container) return;
+
+      if (user) {
+        subtitle.textContent = `Tracking live orders for ${user.name} (${user.email})`;
+      }
+
+      container.innerHTML = '';
+      if (!artisanOrders || artisanOrders.length === 0) {
+        container.innerHTML = '<p class="text-center text-text-muted py-6">No orders found.</p>';
+      } else {
+        artisanOrders.forEach(ord => {
+          const isDelivered = ord.isDelivered === true || ord.deliveryStatus === 'delivered' || ord.status === 'Delivered';
+          const card = document.createElement('div');
+          card.className = "p-3.5 rounded-xl border " + (isDelivered ? "bg-green-50/40 border-green-200" : "bg-amber-50/30 border-amber-200") + " flex items-center justify-between gap-3";
+          card.innerHTML = `
+            <div class="flex items-center gap-3">
+              <img src="${ord.img}" class="w-12 h-12 rounded-lg object-cover border border-border shrink-0"/>
+              <div>
+                <p class="font-bold text-primary text-xs">${ord.item}</p>
+                <p class="text-[11px] text-text-muted mt-0.5">Order ID: <span class="font-mono font-bold">${ord.orderId}</span> • ₹${ord.price.toLocaleString('en-IN')}</p>
+                <p class="text-[10px] text-text-muted">${ord.courier || 'India Post'} • Tracking: <span class="font-mono">${ord.trackingNumber || 'INPOST-84920'}</span></p>
+              </div>
+            </div>
+            <div class="text-right shrink-0">
+              ${isDelivered ? `
+                <span class="px-2 py-0.5 rounded-full bg-green-100 text-green-800 text-[10px] font-bold flex items-center gap-1">
+                  <span class="w-1.5 h-1.5 rounded-full bg-green-600"></span>
+                  <span>Delivered</span>
+                </span>
+                <span class="text-[10px] text-gray-500 block mt-1">${ord.deliveredAt || 'Confirmed'}</span>
+              ` : `
+                <span class="px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 text-[10px] font-bold flex items-center gap-1">
+                  <span class="w-1.5 h-1.5 rounded-full bg-amber-600 animate-pulse"></span>
+                  <span>In Transit</span>
+                </span>
+                <span class="text-[10px] text-amber-800 block mt-1 font-medium">Estimated 2-3 Days</span>
+              `}
+            </div>
+          `;
+          container.appendChild(card);
+        });
+      }
+
+      modal.classList.remove('hidden');
+    }
+
+    function closeMyOrdersModal() {
+      document.getElementById('my-orders-modal').classList.add('hidden');
+    }
+
+    // Connect Logged-in User Session across Webpage
+    function checkUserSession() {
+      const user = getActiveUser();
+
+      const navLabel = document.getElementById('nav-user-label');
+      const mainLabel = document.getElementById('main-user-label');
+      const navBtn = document.getElementById('tab-login-nav');
+      const mainBtn = document.getElementById('main-nav-login');
+
+      // Banner elements
+      const greetingTitle = document.getElementById('greeting-user-title');
+      const greetingDesc = document.getElementById('greeting-user-desc');
+      const greetingRole = document.getElementById('greeting-role-badge');
+      const greetingAvatarImg = document.getElementById('greeting-avatar-img');
+      const greetingIconBox = document.getElementById('greeting-icon-placeholder');
+      const greetingAction = document.getElementById('greeting-action-area');
+
+      // Dropdown elements
+      const dropAvatar = document.getElementById('dropdown-user-avatar');
+      const dropName = document.getElementById('dropdown-user-name');
+      const dropRole = document.getElementById('dropdown-user-role');
+      const dropEmail = document.getElementById('dropdown-user-email');
+
+      if (user) {
+        const shortName = user.name.split(' ')[0];
+
+        // Update Nav buttons to open profile dropdown
+        if (navLabel) navLabel.textContent = shortName;
+        if (mainLabel) mainLabel.textContent = shortName;
+
+        const openDropdownHandler = (e) => {
+          e.preventDefault();
+          toggleUserDropdown();
+        };
+
+        if (navBtn) {
+          navBtn.onclick = openDropdownHandler;
+          navBtn.className = "px-3 py-1 rounded bg-secondary text-white font-bold transition-all flex items-center gap-1 shadow-xs";
+        }
+        if (mainBtn) {
+          mainBtn.onclick = openDropdownHandler;
+          mainBtn.className = "text-xs px-3 py-1.5 font-bold bg-primary text-white hover:bg-secondary rounded transition-all flex items-center gap-1 shadow-xs ml-1";
+        }
+
+        // Update Dropdown Data
+        if (dropName) dropName.textContent = user.name;
+        if (dropEmail) dropEmail.textContent = user.email;
+        if (dropRole) {
+          dropRole.textContent = user.role === 'artisan' ? 'Master Artisan' : 'Verified Patron';
+          dropRole.className = user.role === 'artisan' ? 
+            'px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-secondary text-white inline-block mt-0.5' :
+            'px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-green-100 text-green-800 inline-block mt-0.5';
+        }
+        if (dropAvatar && user.avatar) dropAvatar.src = user.avatar;
+
+        // Update Greeting Banner
+        if (greetingTitle) greetingTitle.textContent = `Namaste, ${user.name}!`;
+        if (greetingRole) {
+          greetingRole.textContent = user.role === 'artisan' ? 'Master Artisan Atelier' : 'Verified Craft Patron';
+          greetingRole.classList.remove('hidden');
+        }
+        if (greetingDesc) {
+          greetingDesc.textContent = user.role === 'artisan' ?
+            'Your Srikalahasti workshop is live and receiving orders with direct 94% bank payout.' :
+            'Your handcrafted orders are shipped directly from village artisans with full delivery tracking.';
+        }
+        if (greetingAvatarImg && user.avatar) {
+          greetingAvatarImg.src = user.avatar;
+          greetingAvatarImg.classList.remove('hidden');
+          if (greetingIconBox) greetingIconBox.classList.add('hidden');
+        }
+        if (greetingAction) {
+          greetingAction.innerHTML = `
+            <button onclick="openMyOrdersModal()" class="px-3 py-1.5 rounded-xl border border-border bg-white hover:border-primary text-primary font-bold text-xs transition-all flex items-center gap-1">
+              <span class="material-symbols-outlined text-[15px] text-secondary">local_shipping</span>
+              <span>Track Deliveries</span>
+            </button>
+            <button onclick="handleUserSignOut()" class="px-3 py-1.5 rounded-xl bg-surface-muted hover:bg-border text-gray-700 font-semibold text-xs transition-all flex items-center gap-1">
+              <span>Sign Out</span>
+            </button>
+          `;
+        }
+      }
+
+      // If redirected with #studio, auto switch to studio
+      if (window.location.hash === '#studio') {
+        showScreen('screen-portal');
+      }
+    }
+
     // Initialize Artisan Studio on Page Load
     window.addEventListener('DOMContentLoaded', () => {
+      checkUserSession();
       renderArtisanStudioOrders();
       renderArtisanCraftsGallery();
 
