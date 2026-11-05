@@ -1,4 +1,4 @@
-# 🏺 Firebase Firestore Database Setup Guide for HeritageConnect
+# 🏺 Setup Guide for HeritageConnect
 
 This guide walks you through setting up and running your **Google Cloud Firestore Database** for the **HeritageConnect** authentic Indian handicrafts platform.
 
