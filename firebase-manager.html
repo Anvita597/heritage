@@ -339,35 +339,120 @@
         </table>
       </div>
 
-      <!-- VIEW C: Live Orders Feed Table -->
-      <div id="view-orders" class="hidden overflow-x-auto">
-        <div class="mb-3 p-3 bg-secondary-light/60 border border-secondary/30 rounded-xl flex items-center justify-between text-xs text-secondary-dark font-medium">
-          <span class="flex items-center gap-1.5">
-            <span class="material-symbols-outlined text-[18px]">bolt</span>
-            <span>Real-time Order Stream: New orders submitted in checkout will appear here instantly.</span>
-          </span>
-          <button onclick="createSimulatedOrder()" class="px-2.5 py-1 bg-primary text-white rounded text-[11px] font-bold hover:bg-secondary transition-all">
-            + Simulate Test Order
-          </button>
+      <!-- VIEW C: Live Orders & Delivery Tracking Database -->
+      <div id="view-orders" class="hidden space-y-5">
+        
+        <!-- DELIVERY TRACKING SUMMARY DASHBOARD -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <!-- Total Orders Card -->
+          <div class="bg-surface-muted border border-border rounded-xl p-4 flex items-center justify-between shadow-xs">
+            <div>
+              <span class="text-[11px] font-bold uppercase tracking-wider text-gray-500">Total Orders Tracked</span>
+              <p class="font-serif text-3xl font-bold text-primary mt-0.5" id="deliv-stat-total">6</p>
+              <span class="text-[11px] text-gray-500 mt-0.5 block" id="deliv-stat-total-value">Total GMV: ₹10,100</span>
+            </div>
+            <div class="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
+              <span class="material-symbols-outlined text-2xl">local_shipping</span>
+            </div>
+          </div>
+
+          <!-- Delivered Orders Card -->
+          <div class="bg-green-50/80 border border-green-200 rounded-xl p-4 flex items-center justify-between shadow-xs">
+            <div>
+              <div class="flex items-center gap-1.5">
+                <span class="text-[11px] font-bold uppercase tracking-wider text-green-800">Delivered Orders</span>
+                <span class="px-1.5 py-0.2 bg-green-200 text-green-900 rounded text-[10px] font-bold" id="deliv-percent-badge">50%</span>
+              </div>
+              <p class="font-serif text-3xl font-bold text-green-800 mt-0.5" id="deliv-stat-delivered">3</p>
+              <span class="text-[11px] text-green-700 mt-0.5 block">✓ Delivered to customer</span>
+            </div>
+            <div class="w-12 h-12 rounded-xl bg-green-100 text-green-700 flex items-center justify-center">
+              <span class="material-symbols-outlined text-2xl">verified</span>
+            </div>
+          </div>
+
+          <!-- Not Delivered Orders Card -->
+          <div class="bg-amber-50/80 border border-amber-200 rounded-xl p-4 flex items-center justify-between shadow-xs">
+            <div>
+              <div class="flex items-center gap-1.5">
+                <span class="text-[11px] font-bold uppercase tracking-wider text-amber-800">Not Delivered</span>
+                <span class="px-1.5 py-0.2 bg-amber-200 text-amber-900 rounded text-[10px] font-bold" id="not-deliv-percent-badge">50%</span>
+              </div>
+              <p class="font-serif text-3xl font-bold text-amber-900 mt-0.5" id="deliv-stat-not-delivered">3</p>
+              <span class="text-[11px] text-amber-700 mt-0.5 block">
+                <strong id="deliv-stat-transit">2</strong> in transit • <strong id="deliv-stat-pending">1</strong> packing
+              </span>
+            </div>
+            <div class="w-12 h-12 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center">
+              <span class="material-symbols-outlined text-2xl">pending_actions</span>
+            </div>
+          </div>
         </div>
-        <table class="w-full text-left text-xs border-collapse">
-          <thead>
-            <tr class="bg-surface-muted border-y border-border text-gray-600 font-bold uppercase text-[10px] tracking-wider">
-              <th class="p-3">Order ID</th>
-              <th class="p-3">Customer</th>
-              <th class="p-3">Items Purchased</th>
-              <th class="p-3">Total Paid</th>
-              <th class="p-3">Artisan Payout (94%)</th>
-              <th class="p-3">Status</th>
-              <th class="p-3">Timestamp</th>
-            </tr>
-          </thead>
-          <tbody id="orders-table-body" class="divide-y divide-border">
-            <tr>
-              <td colspan="7" class="p-8 text-center text-gray-400">Loading orders...</td>
-            </tr>
-          </tbody>
-        </table>
+
+        <!-- Delivery Progress Visual Bar -->
+        <div class="bg-surface-muted border border-border rounded-xl p-3">
+          <div class="flex items-center justify-between text-xs mb-1.5">
+            <span class="font-bold text-gray-700 flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-[16px] text-secondary">analytics</span>
+              <span>Delivery Completion Ratio</span>
+            </span>
+            <span class="font-bold text-primary" id="deliv-progress-label">3 of 6 Delivered (50%)</span>
+          </div>
+          <div class="w-full h-3 bg-gray-200 rounded-full overflow-hidden flex">
+            <div id="deliv-progress-bar" class="bg-green-600 h-full transition-all duration-500" style="width: 50%" title="Delivered"></div>
+            <div id="not-deliv-progress-bar" class="bg-amber-400 h-full transition-all duration-500" style="width: 50%" title="Not Delivered"></div>
+          </div>
+          <div class="flex items-center justify-between text-[10px] text-gray-500 mt-1">
+            <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-green-600 inline-block"></span> Delivered</span>
+            <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-amber-400 inline-block"></span> Not Delivered (In Transit / Packing)</span>
+          </div>
+        </div>
+
+        <!-- Filter Sub-bar & Test Actions -->
+        <div class="p-3 bg-secondary-light/60 border border-secondary/30 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+          <!-- Delivery Filter Tabs -->
+          <div class="flex items-center gap-1.5 bg-white p-1 rounded-lg border border-border">
+            <button onclick="filterDeliveryOrders('all')" id="btn-deliv-filter-all" class="px-3 py-1 rounded bg-primary text-white font-bold transition-all text-[11px]">
+              All Orders (<span id="filter-count-all">6</span>)
+            </button>
+            <button onclick="filterDeliveryOrders('delivered')" id="btn-deliv-filter-delivered" class="px-3 py-1 rounded text-gray-700 hover:text-primary font-semibold transition-all text-[11px]">
+              ✅ Delivered (<span id="filter-count-delivered">3</span>)
+            </button>
+            <button onclick="filterDeliveryOrders('not_delivered')" id="btn-deliv-filter-not" class="px-3 py-1 rounded text-gray-700 hover:text-primary font-semibold transition-all text-[11px]">
+              ⏳ Not Delivered (<span id="filter-count-not">3</span>)
+            </button>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <button onclick="createSimulatedOrder()" class="px-3 py-1.5 bg-primary text-white rounded-lg text-[11px] font-bold hover:bg-secondary transition-all flex items-center gap-1">
+              <span class="material-symbols-outlined text-[15px]">add_shopping_cart</span>
+              <span>+ Simulate New Order</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Orders Table with Delivery Columns -->
+        <div class="overflow-x-auto border border-border rounded-xl">
+          <table class="w-full text-left text-xs border-collapse">
+            <thead>
+              <tr class="bg-surface-muted border-b border-border text-gray-600 font-bold uppercase text-[10px] tracking-wider">
+                <th class="p-3">Order ID &amp; Date</th>
+                <th class="p-3">Customer &amp; City</th>
+                <th class="p-3">Craft Items</th>
+                <th class="p-3">Total / Payout</th>
+                <th class="p-3">Delivery Status</th>
+                <th class="p-3">Tracking / Courier</th>
+                <th class="p-3 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="orders-table-body" class="divide-y divide-border bg-white">
+              <tr>
+                <td colspan="7" class="p-8 text-center text-gray-400">Loading delivery tracking orders...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
       </div>
 
     </div>
@@ -762,36 +847,174 @@ service cloud.firestore {
       });
     }
 
+    let currentDeliveryFilter = 'all';
+
     function renderOrdersTable(orders) {
       const tbody = document.getElementById('orders-table-body');
+      if (!tbody) return;
       tbody.innerHTML = '';
-      if (orders.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="7" class="p-8 text-center text-gray-400">No orders yet. Place an order on the marketplace or click "Simulate Test Order".</td></tr>';
+
+      const list = orders || cachedOrders;
+
+      // Compute and update delivery metrics
+      updateDeliveryDashboardMetrics(list);
+
+      // Apply delivery filter
+      let filtered = list;
+      if (currentDeliveryFilter === 'delivered') {
+        filtered = list.filter(o => o.isDelivered === true || o.deliveryStatus === 'delivered' || o.status === 'Delivered');
+      } else if (currentDeliveryFilter === 'not_delivered') {
+        filtered = list.filter(o => !(o.isDelivered === true || o.deliveryStatus === 'delivered' || o.status === 'Delivered'));
+      }
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" class="p-8 text-center text-gray-400">No orders match this delivery filter.</td></tr>';
         return;
       }
 
-      orders.forEach(o => {
+      filtered.forEach(o => {
         const tr = document.createElement('tr');
         tr.className = "hover:bg-surface-muted/50 transition-colors";
-        const dateStr = o.createdAt ? new Date(o.createdAt).toLocaleString('en-IN') : 'Just now';
+        const dateStr = o.createdAt ? new Date(o.createdAt).toLocaleDateString('en-IN') : 'Recent';
         const itemsSummary = (o.items || []).map(i => `${i.name} (₹${i.price})`).join(', ') || '1x Handcrafted Item';
+        const isDelivered = o.isDelivered === true || o.deliveryStatus === 'delivered' || o.status === 'Delivered';
+        const stage = o.fulfillmentStage || (isDelivered ? 'delivered' : 'in_transit');
+        const trackingNum = o.trackingNumber || `INPOST-${(o.orderId || '84920').slice(-5)}`;
+        const courier = o.courier || 'India Post SpeedPost';
 
         tr.innerHTML = `
-          <td class="p-3 font-mono font-bold text-secondary-dark">${o.orderId || o.id}</td>
           <td class="p-3">
-            <p class="font-bold text-gray-900">${o.customerName}</p>
-            <p class="text-[11px] text-gray-500">${o.customerLocation || o.customerEmail}</p>
+            <span class="font-mono font-bold text-secondary-dark block">${o.orderId || o.id}</span>
+            <span class="text-[10px] text-gray-500">${dateStr}</span>
+          </td>
+          <td class="p-3">
+            <p class="font-bold text-gray-900">${o.customerName || 'Craft Patron'}</p>
+            <p class="text-[11px] text-gray-500">${o.customerLocation || o.customerEmail || 'India'}</p>
           </td>
           <td class="p-3 text-gray-700 max-w-xs truncate" title="${itemsSummary}">${itemsSummary}</td>
-          <td class="p-3 font-serif font-bold text-gray-900">₹${(o.totalAmount || 0).toLocaleString('en-IN')}</td>
-          <td class="p-3 font-serif font-bold text-green-700">₹${(o.artisanPayout || 0).toLocaleString('en-IN')}</td>
           <td class="p-3">
-            <span class="px-2 py-0.5 rounded bg-green-100 text-green-800 font-bold text-[10px] uppercase">${o.status || 'Confirmed'}</span>
+            <span class="font-serif font-bold text-gray-900 block">₹${(o.totalAmount || 0).toLocaleString('en-IN')}</span>
+            <span class="font-serif text-[11px] text-green-700 font-semibold">₹${(o.artisanPayout || Math.round((o.totalAmount || 0) * 0.94)).toLocaleString('en-IN')} payout</span>
           </td>
-          <td class="p-3 text-gray-500 text-[11px]">${dateStr}</td>
+          <td class="p-3">
+            ${isDelivered ? `
+              <span class="px-2.5 py-1 rounded-full bg-green-100 text-green-800 font-bold text-[11px] inline-flex items-center gap-1.5 border border-green-200">
+                <span class="w-2 h-2 rounded-full bg-green-600"></span>
+                <span>Delivered</span>
+              </span>
+              <span class="text-[10px] text-gray-500 block mt-0.5">
+                ${o.deliveredAt ? new Date(o.deliveredAt).toLocaleDateString() : 'Verified by courier'}
+              </span>
+            ` : `
+              <span class="px-2.5 py-1 rounded-full bg-amber-100 text-amber-800 font-bold text-[11px] inline-flex items-center gap-1.5 border border-amber-200">
+                <span class="w-2 h-2 rounded-full bg-amber-600 animate-pulse"></span>
+                <span>Not Delivered</span>
+              </span>
+              <span class="text-[10px] text-amber-800 font-medium block mt-0.5">
+                ${stage === 'in_transit' ? '🚚 In Transit with courier' : '📦 Preparing in workshop'}
+              </span>
+            `}
+          </td>
+          <td class="p-3">
+            <span class="font-mono text-[11px] text-gray-800 font-semibold block">${trackingNum}</span>
+            <span class="text-[10px] text-gray-500">${courier}</span>
+          </td>
+          <td class="p-3 text-right">
+            ${isDelivered ? `
+              <button onclick="toggleOrderDeliveryStatus('${o.orderId || o.id}', false)" class="px-2.5 py-1.5 rounded-lg border border-border hover:bg-surface-muted text-gray-600 text-[11px] font-semibold transition-all inline-flex items-center gap-1" title="Mark as Not Delivered">
+                <span class="material-symbols-outlined text-[14px]">undo</span>
+                <span>Mark Undelivered</span>
+              </button>
+            ` : `
+              <button onclick="toggleOrderDeliveryStatus('${o.orderId || o.id}', true)" class="px-3 py-1.5 rounded-lg bg-green-600 hover:bg-green-700 text-white text-[11px] font-bold transition-all shadow-xs inline-flex items-center gap-1">
+                <span class="material-symbols-outlined text-[15px]">check_circle</span>
+                <span>Mark Delivered</span>
+              </button>
+            `}
+          </td>
         `;
         tbody.appendChild(tr);
       });
+    }
+
+    function updateDeliveryDashboardMetrics(orders) {
+      const stats = window.HeritageDB.computeDeliveryStats(orders);
+
+      const totalEl = document.getElementById('deliv-stat-total');
+      const delivEl = document.getElementById('deliv-stat-delivered');
+      const notDelivEl = document.getElementById('deliv-stat-not-delivered');
+      const transitEl = document.getElementById('deliv-stat-transit');
+      const pendingEl = document.getElementById('deliv-stat-pending');
+      const percentBadge = document.getElementById('deliv-percent-badge');
+      const notPercentBadge = document.getElementById('not-deliv-percent-badge');
+      const progressLabel = document.getElementById('deliv-progress-label');
+      const progressBar = document.getElementById('deliv-progress-bar');
+      const notProgressBar = document.getElementById('not-deliv-progress-bar');
+      const totalValEl = document.getElementById('deliv-stat-total-value');
+
+      const filterAll = document.getElementById('filter-count-all');
+      const filterDeliv = document.getElementById('filter-count-delivered');
+      const filterNot = document.getElementById('filter-count-not');
+
+      if (totalEl) totalEl.textContent = stats.totalOrders;
+      if (delivEl) delivEl.textContent = stats.deliveredCount;
+      if (notDelivEl) notDelivEl.textContent = stats.notDeliveredCount;
+      if (transitEl) transitEl.textContent = stats.inTransitCount;
+      if (pendingEl) pendingEl.textContent = stats.pendingPackingCount;
+
+      if (percentBadge) percentBadge.textContent = `${stats.deliveredPercentage}%`;
+      if (notPercentBadge) notPercentBadge.textContent = `${100 - stats.deliveredPercentage}%`;
+
+      if (progressLabel) {
+        progressLabel.textContent = `${stats.deliveredCount} of ${stats.totalOrders} Delivered (${stats.deliveredPercentage}%)`;
+      }
+
+      if (progressBar) progressBar.style.width = `${stats.deliveredPercentage}%`;
+      if (notProgressBar) notProgressBar.style.width = `${100 - stats.deliveredPercentage}%`;
+
+      if (filterAll) filterAll.textContent = stats.totalOrders;
+      if (filterDeliv) filterDeliv.textContent = stats.deliveredCount;
+      if (filterNot) filterNot.textContent = stats.notDeliveredCount;
+
+      const totalVal = (orders || []).reduce((sum, o) => sum + (o.totalAmount || 0), 0);
+      if (totalValEl) totalValEl.textContent = `Total GMV: ₹${totalVal.toLocaleString('en-IN')}`;
+    }
+
+    function filterDeliveryOrders(filter) {
+      currentDeliveryFilter = filter;
+      ['all', 'delivered', 'not'].forEach(f => {
+        const btn = document.getElementById(`btn-deliv-filter-${f}`);
+        if (btn) {
+          const isTarget = (f === 'all' && filter === 'all') || 
+                           (f === 'delivered' && filter === 'delivered') ||
+                           (f === 'not' && filter === 'not_delivered');
+          btn.className = "px-3 py-1 rounded text-[11px] transition-all " +
+            (isTarget ? "bg-primary text-white font-bold" : "text-gray-700 hover:text-primary font-semibold");
+        }
+      });
+      renderOrdersTable(cachedOrders);
+    }
+
+    async function toggleOrderDeliveryStatus(orderId, setDelivered) {
+      try {
+        await window.HeritageDB.updateOrderDelivery(orderId, setDelivered);
+        
+        // Update local cache
+        const target = cachedOrders.find(o => (o.orderId || o.id) === orderId);
+        if (target) {
+          target.isDelivered = setDelivered;
+          target.deliveryStatus = setDelivered ? 'delivered' : 'not_delivered';
+          target.status = setDelivered ? 'Delivered' : 'In Transit';
+          target.fulfillmentStage = setDelivered ? 'delivered' : 'in_transit';
+          target.deliveredAt = setDelivered ? new Date().toISOString() : null;
+        }
+
+        renderOrdersTable(cachedOrders);
+        const msg = setDelivered ? `Order ${orderId} marked as DELIVERED! Status updated in Firestore.` : `Order ${orderId} reverted to NOT DELIVERED (In Transit).`;
+        console.log(msg);
+      } catch (err) {
+        alert("Update error: " + err.message);
+      }
     }
 
     // Tab switcher

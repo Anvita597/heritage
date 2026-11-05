@@ -99,10 +99,6 @@
            Artisan Studio
         </button>
 
-<a href="firebase-manager.html" target="_blank" class="px-2.5 py-1 rounded bg-secondary hover:bg-secondary-dark text-white font-bold transition-all flex items-center gap-1 shadow" id="tab-firebase" title="Manage Cloud Firestore Database">
-  <span class="material-symbols-outlined text-[14px]">database</span>
-  <span>Firebase DB</span>
-</a>
 </nav>
 <div class="hidden lg:flex items-center gap-1.5 text-secondary pl-3 border-l border-white/20 whitespace-nowrap">
 <span class="material-symbols-outlined text-[16px]">info</span>
@@ -1155,97 +1151,122 @@
     </div>
   </div>
 
-  <!-- 3 BIG SIMPLIFIED TOUCH/ICON ACTION CARDS -->
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
+  <!-- 4 BIG TOUCH/ICON ACTION & DELIVERY TRACKING CARDS -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
     
     <!-- 1. CAMERA ICON: UPLOAD PHOTOS -->
-    <div onclick="openArtisanCameraModal()" class="cursor-pointer bg-white border-2 border-secondary/40 hover:border-secondary rounded-2xl p-6 craft-shadow hover:shadow-lg transition-all group relative overflow-hidden flex flex-col justify-between">
-      <div class="absolute top-0 right-0 w-24 h-24 bg-secondary/10 rounded-bl-full pointer-events-none group-hover:scale-110 transition-transform"></div>
-      
+    <div onclick="openArtisanCameraModal()" class="cursor-pointer bg-white border-2 border-secondary/40 hover:border-secondary rounded-2xl p-5 craft-shadow hover:shadow-lg transition-all group relative overflow-hidden flex flex-col justify-between">
       <div>
-        <div class="w-14 h-14 rounded-2xl bg-secondary-light text-secondary-dark border border-secondary/30 flex items-center justify-center mb-4 group-hover:bg-secondary group-hover:text-white transition-colors shadow-sm">
-          <span class="material-symbols-outlined text-3xl">photo_camera</span>
+        <div class="w-12 h-12 rounded-xl bg-secondary-light text-secondary-dark border border-secondary/30 flex items-center justify-center mb-3 group-hover:bg-secondary group-hover:text-white transition-colors shadow-sm">
+          <span class="material-symbols-outlined text-2xl">photo_camera</span>
         </div>
-        <span class="inline-block px-2 py-0.5 rounded bg-secondary-light text-secondary-dark text-[10px] font-bold uppercase tracking-wider mb-2">
-          New Listing
+        <span class="inline-block px-2 py-0.5 rounded bg-secondary-light text-secondary-dark text-[10px] font-bold uppercase tracking-wider mb-1">
+          Instant Listing
         </span>
-        <h3 class="font-serif text-xl font-bold text-primary mb-1.5">Upload Craft Photo</h3>
-        <p class="text-xs text-text-muted leading-relaxed">
-          Snap a photo of your fresh finished artwork using your camera to post it directly to Indian craft lovers.
+        <h3 class="font-serif text-lg font-bold text-primary">Upload Craft Photo</h3>
+        <p class="text-[11px] text-text-muted mt-1 leading-relaxed">
+          Snap a photo with your camera to list fresh art directly to buyers.
         </p>
       </div>
 
-      <div class="mt-5 pt-3 border-t border-border flex items-center justify-between text-xs font-bold text-secondary-dark group-hover:text-primary transition-colors">
-        <span class="flex items-center gap-1.5">
-          <span class="material-symbols-outlined text-[18px]">add_a_photo</span>
-          <span>Open Camera / Upload</span>
-        </span>
-        <span class="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
+      <div class="mt-4 pt-2.5 border-t border-border flex items-center justify-between text-xs font-bold text-secondary-dark group-hover:text-primary transition-colors">
+        <span>+ Open Camera</span>
+        <span class="material-symbols-outlined text-[16px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
       </div>
     </div>
 
-    <!-- 2. ORDERS RECEIVED: HOW MANY ORDERS RECEIVED -->
-    <div class="bg-white border-2 border-green-600/30 hover:border-green-600/60 rounded-2xl p-6 craft-shadow transition-all relative overflow-hidden flex flex-col justify-between">
-      <div class="absolute top-0 right-0 w-24 h-24 bg-green-50 rounded-bl-full pointer-events-none"></div>
-
+    <!-- 2. TOTAL ORDERS RECEIVED -->
+    <div class="bg-white border-2 border-primary/20 hover:border-primary/50 rounded-2xl p-5 craft-shadow transition-all relative overflow-hidden flex flex-col justify-between">
       <div>
-        <div class="flex items-center justify-between mb-4">
-          <div class="w-14 h-14 rounded-2xl bg-green-50 text-green-700 border border-green-200 flex items-center justify-center shadow-sm">
-            <span class="material-symbols-outlined text-3xl">receipt_long</span>
+        <div class="flex items-center justify-between mb-3">
+          <div class="w-12 h-12 rounded-xl bg-slate-100 text-primary border border-border flex items-center justify-center shadow-sm">
+            <span class="material-symbols-outlined text-2xl">receipt_long</span>
           </div>
-          <span class="flex items-center gap-1 px-2.5 py-1 rounded-full bg-green-100 text-green-800 text-[10px] font-bold">
-            <span class="w-2 h-2 rounded-full bg-green-600 animate-pulse"></span>
-            <span>Live Stream</span>
+          <span class="flex items-center gap-1 px-2 py-0.5 rounded-full bg-slate-100 text-primary text-[10px] font-bold">
+            <span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
+            <span>Live Feed</span>
           </span>
         </div>
 
-        <span class="inline-block px-2 py-0.5 rounded bg-green-50 text-green-800 text-[10px] font-bold uppercase tracking-wider mb-1">
-          Demand &amp; Sales
+        <span class="inline-block px-2 py-0.5 rounded bg-slate-100 text-primary text-[10px] font-bold uppercase tracking-wider mb-1">
+          All Orders
         </span>
-        <h3 class="font-serif text-xl font-bold text-primary mb-1">Orders Received</h3>
-        <div class="flex items-baseline gap-2 mt-2">
-          <span class="font-serif text-4xl font-bold text-primary" id="artisan-orders-received-num">12</span>
-          <span class="text-xs font-semibold text-text-muted">Total Orders Received</span>
+        <h3 class="font-serif text-lg font-bold text-primary">Orders Received</h3>
+        <div class="flex items-baseline gap-2 mt-1">
+          <span class="font-serif text-3xl font-bold text-primary" id="artisan-orders-received-num">6</span>
+          <span class="text-[11px] font-semibold text-text-muted">Total Placed</span>
         </div>
-        <p class="text-xs text-text-muted mt-2">
-          <strong class="text-green-700 font-bold" id="artisan-new-orders-pill">3 New Orders</strong> waiting to be packed &amp; dispatched.
+        <p class="text-[11px] text-text-muted mt-1" id="artisan-payout-total-pill">
+          94% Payout: <strong class="text-green-700 font-bold" id="artisan-payout-total">₹10,100</strong>
         </p>
       </div>
 
-      <div class="mt-5 pt-3 border-t border-border flex items-center justify-between text-xs">
-        <span class="font-bold text-primary">Direct 94% Payout:</span>
-        <span class="font-serif font-bold text-green-700 text-sm" id="artisan-payout-total">₹38,400</span>
+      <div class="mt-4 pt-2.5 border-t border-border flex items-center justify-between text-[11px] text-text-muted">
+        <span>Connected to SBI</span>
+        <span class="text-green-700 font-bold">94% Direct Margin</span>
       </div>
     </div>
 
-    <!-- 3. ORDERS PLACED / DISPATCHED & ACTIVE SHIPMENTS -->
-    <div class="bg-white border-2 border-primary/20 hover:border-primary/50 rounded-2xl p-6 craft-shadow transition-all relative overflow-hidden flex flex-col justify-between">
-      <div class="absolute top-0 right-0 w-24 h-24 bg-slate-100 rounded-bl-full pointer-events-none"></div>
+    <!-- 3. DELIVERED ORDERS (DATABASE DELIVERY TRACKING) -->
+    <div class="bg-white border-2 border-green-600/40 hover:border-green-600/70 rounded-2xl p-5 craft-shadow transition-all relative overflow-hidden flex flex-col justify-between">
+      <div class="absolute top-0 right-0 w-16 h-16 bg-green-50 rounded-bl-full pointer-events-none"></div>
 
       <div>
-        <div class="w-14 h-14 rounded-2xl bg-slate-100 text-primary border border-border flex items-center justify-center mb-4 shadow-sm">
-          <span class="material-symbols-outlined text-3xl">local_shipping</span>
+        <div class="flex items-center justify-between mb-3">
+          <div class="w-12 h-12 rounded-xl bg-green-50 text-green-700 border border-green-200 flex items-center justify-center shadow-sm">
+            <span class="material-symbols-outlined text-2xl">verified</span>
+          </div>
+          <span class="px-2 py-0.5 rounded-full bg-green-100 text-green-800 text-[10px] font-bold" id="artisan-deliv-percent-badge">50% Ratio</span>
         </div>
-        
-        <span class="inline-block px-2 py-0.5 rounded bg-slate-100 text-primary text-[10px] font-bold uppercase tracking-wider mb-1">
-          Fulfilled &amp; In Transit
+
+        <span class="inline-block px-2 py-0.5 rounded bg-green-50 text-green-800 text-[10px] font-bold uppercase tracking-wider mb-1">
+          Fulfilled
         </span>
-        <h3 class="font-serif text-xl font-bold text-primary mb-1">Orders Placed &amp; Dispatched</h3>
-        <div class="flex items-baseline gap-2 mt-2">
-          <span class="font-serif text-4xl font-bold text-primary" id="artisan-orders-dispatched-num">9</span>
-          <span class="text-xs font-semibold text-text-muted">Dispatched to Buyers</span>
+        <h3 class="font-serif text-lg font-bold text-primary">Orders Delivered</h3>
+        <div class="flex items-baseline gap-2 mt-1">
+          <span class="font-serif text-3xl font-bold text-green-700" id="artisan-orders-delivered-num">3</span>
+          <span class="text-[11px] font-semibold text-text-muted">Delivered to buyers</span>
         </div>
-        <p class="text-xs text-text-muted mt-2">
-          Handled by India Post SpeedPost &amp; Certified Guild Logistics with doorstep village pickup.
+        <p class="text-[11px] text-green-700 mt-1 font-medium flex items-center gap-1">
+          <span class="material-symbols-outlined text-[14px]">check_circle</span>
+          <span>Verified customer deliveries</span>
         </p>
       </div>
 
-      <div class="mt-5 pt-3 border-t border-border flex items-center justify-between text-xs">
-        <span class="text-green-700 font-bold flex items-center gap-1">
-          <span class="material-symbols-outlined text-[15px]">check_circle</span>
-          <span>100% On-Time Delivery</span>
+      <div class="mt-4 pt-2.5 border-t border-border flex items-center justify-between text-[11px]">
+        <span class="text-green-800 font-bold">Doorstep Confirmed</span>
+        <span class="text-text-muted">Zero Returns</span>
+      </div>
+    </div>
+
+    <!-- 4. NOT DELIVERED ORDERS (IN TRANSIT / PACKING) -->
+    <div class="bg-white border-2 border-amber-500/40 hover:border-amber-500/70 rounded-2xl p-5 craft-shadow transition-all relative overflow-hidden flex flex-col justify-between">
+      <div class="absolute top-0 right-0 w-16 h-16 bg-amber-50 rounded-bl-full pointer-events-none"></div>
+
+      <div>
+        <div class="flex items-center justify-between mb-3">
+          <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-700 border border-amber-200 flex items-center justify-center shadow-sm">
+            <span class="material-symbols-outlined text-2xl">pending_actions</span>
+          </div>
+          <span class="px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 text-[10px] font-bold" id="artisan-not-deliv-badge">3 Active</span>
+        </div>
+
+        <span class="inline-block px-2 py-0.5 rounded bg-amber-50 text-amber-800 text-[10px] font-bold uppercase tracking-wider mb-1">
+          Action Required
         </span>
-        <span class="text-text-muted text-[11px]">Avg: 3 Days</span>
+        <h3 class="font-serif text-lg font-bold text-primary">Not Delivered</h3>
+        <div class="flex items-baseline gap-2 mt-1">
+          <span class="font-serif text-3xl font-bold text-amber-900" id="artisan-orders-not-delivered-num">3</span>
+          <span class="text-[11px] font-semibold text-text-muted">In Progress</span>
+        </div>
+        <p class="text-[11px] text-amber-800 mt-1" id="artisan-not-deliv-subtext">
+          <strong id="artisan-sub-transit">2</strong> in transit • <strong id="artisan-sub-packing">1</strong> to pack
+        </p>
+      </div>
+
+      <div class="mt-4 pt-2.5 border-t border-border flex items-center justify-between text-[11px]">
+        <span class="text-amber-800 font-semibold">India Post Dispatch</span>
+        <span class="text-text-muted">Avg: 3 Days</span>
       </div>
     </div>
 
@@ -1264,13 +1285,13 @@
 
       <div class="flex items-center gap-2">
         <button onclick="filterArtisanOrders('all')" class="artisan-filter-btn px-3 py-1.5 rounded-lg bg-primary text-white text-xs font-bold transition-all" id="btn-ord-all">
-          All Orders (<span id="count-badge-all">12</span>)
+          All (<span id="count-badge-all">6</span>)
         </button>
-        <button onclick="filterArtisanOrders('new')" class="artisan-filter-btn px-3 py-1.5 rounded-lg bg-surface-muted text-text-main text-xs font-semibold hover:bg-border transition-all" id="btn-ord-new">
-          New (<span id="count-badge-new">3</span>)
+        <button onclick="filterArtisanOrders('delivered')" class="artisan-filter-btn px-3 py-1.5 rounded-lg bg-surface-muted text-text-main text-xs font-semibold hover:bg-border transition-all" id="btn-ord-delivered">
+          ✅ Delivered (<span id="count-badge-delivered">3</span>)
         </button>
-        <button onclick="filterArtisanOrders('shipped')" class="artisan-filter-btn px-3 py-1.5 rounded-lg bg-surface-muted text-text-main text-xs font-semibold hover:bg-border transition-all" id="btn-ord-shipped">
-          Dispatched (<span id="count-badge-shipped">9</span>)
+        <button onclick="filterArtisanOrders('not_delivered')" class="artisan-filter-btn px-3 py-1.5 rounded-lg bg-surface-muted text-text-main text-xs font-semibold hover:bg-border transition-all" id="btn-ord-not-delivered">
+          ⏳ Not Delivered (<span id="count-badge-not-delivered">3</span>)
         </button>
       </div>
     </div>
@@ -1961,59 +1982,106 @@
     // =========================================================================
     let artisanOrders = [
       {
-        orderId: "HC-GI-94821",
-        customer: "Ananya Iyer",
-        location: "Bengaluru, Karnataka",
-        time: "10 mins ago",
-        item: "Tree of Life Hand-Drawn Scroll",
-        price: 3200,
-        payout: 3008,
-        status: "New Order",
-        img: "https://lh3.googleusercontent.com/aida-public/AB6AXuDV7GYPPT8Qns4GIurHsU8OBywdun1if4E14PEXL8Acdd6tNjyF6uDZ209-zTl4P5GkCYaxh5dXbV_HeM_KiKml5-CDB3fg7tJUOXwbhPk4hCEhO6EGiF1OBNIUalroy8kFS5TcILSKhGsrd4CodMdgz7BQyilVeyjAHGgIScvvEFIG7LpY7mK_KsL7RZ21yyt_eH1qTKUOu5Fr9p-K1nWmP0b_JAI3E18gTN0xfoff"
-      },
-      {
-        orderId: "HC-GI-94819",
+        orderId: "HC-GI-84920",
         customer: "Vikramaditya Sharma",
         location: "Gurgaon, Haryana",
-        time: "2 hours ago",
-        item: "Miniature Dancing Bobble Toy",
-        price: 650,
-        payout: 611,
-        status: "New Order",
-        img: "https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?auto=format&fit=crop&w=600&q=80"
-      },
-      {
-        orderId: "HC-GI-94818",
-        customer: "Sneha Mukherjee",
-        location: "Kolkata, West Bengal",
-        time: "5 hours ago",
-        item: "Hand-Painted Coaster Set (4 Pcs)",
-        price: 550,
-        payout: 517,
-        status: "New Order",
-        img: "https://lh3.googleusercontent.com/aida-public/AB6AXuCQloTU6n-Ogz1D4JwtRX9sLwSzRSP4_ETOe_92LPLCfZM-QkvRw1eqnZQyu7qiFvH_fRAaokg84Ang8YHndo2uc3lq7yyU0AgjQINGrKobybUEhZS81FLJqonUkoGvpcsb5yTSgEMRJDNNBHhu75unluxiv0gBPUI78REMnpwh8DwKTfO0yTcBb_CAsGL2iTxs9LjxujNIvdo7cNJdU4n_3x_k49HOvO1riLY3DV02"
-      },
-      {
-        orderId: "HC-GI-94815",
-        customer: "Pooja Hegde",
-        location: "Mumbai, Maharashtra",
-        time: "Yesterday",
+        time: "4 days ago",
         item: "Terracotta Incense & Diya Set",
-        price: 450,
-        payout: 423,
-        status: "Dispatched",
+        price: 1650,
+        payout: 1551,
+        isDelivered: true,
+        deliveryStatus: "delivered",
+        fulfillmentStage: "delivered",
+        status: "Delivered",
+        deliveredAt: "Yesterday",
+        trackingNumber: "INPOST-84920",
+        courier: "India Post SpeedPost",
         img: "https://images.unsplash.com/photo-1606744888344-493238955dd5?auto=format&fit=crop&w=600&q=80"
       },
       {
-        orderId: "HC-GI-94810",
+        orderId: "HC-GI-84921",
+        customer: "Ananya Iyer",
+        location: "Bengaluru, Karnataka",
+        time: "2 days ago",
+        item: "Tree of Life Hand-Drawn Scroll",
+        price: 3200,
+        payout: 3008,
+        isDelivered: false,
+        deliveryStatus: "not_delivered",
+        fulfillmentStage: "in_transit",
+        status: "In Transit",
+        deliveredAt: null,
+        trackingNumber: "INPOST-84921",
+        courier: "Guild Express Logistics",
+        img: "https://lh3.googleusercontent.com/aida-public/AB6AXuDV7GYPPT8Qns4GIurHsU8OBywdun1if4E14PEXL8Acdd6tNjyF6uDZ209-zTl4P5GkCYaxh5dXbV_HeM_KiKml5-CDB3fg7tJUOXwbhPk4hCEhO6EGiF1OBNIUalroy8kFS5TcILSKhGsrd4CodMdgz7BQyilVeyjAHGgIScvvEFIG7LpY7mK_KsL7RZ21yyt_eH1qTKUOu5Fr9p-K1nWmP0b_JAI3E18gTN0xfoff"
+      },
+      {
+        orderId: "HC-GI-84922",
+        customer: "Pooja Hegde",
+        location: "Mumbai, Maharashtra",
+        time: "3 days ago",
+        item: "Handwoven Ikat Silk-Cotton Stole",
+        price: 1450,
+        payout: 1363,
+        isDelivered: true,
+        deliveryStatus: "delivered",
+        fulfillmentStage: "delivered",
+        status: "Delivered",
+        deliveredAt: "2 days ago",
+        trackingNumber: "INPOST-84922",
+        courier: "India Post SpeedPost",
+        img: "https://lh3.googleusercontent.com/aida-public/AB6AXuDFkW-ZZME1SLwCNBqi-g-X0MG-skzIyTj73IfYZmncVw6HtBTSziGspiIt-ojX9H2leGkBMS7a1s3XLunj01_rUNAGJqtkRGICDQZE7dJ_K_dD5q_RAVxVX-PX8ELAJ2IDi4xn-zMbvnx8q1w2DHZXSLQCE8lJonv1Pdd-yXBG5gcM6md70ynlHJa-pdoMo4MvtvoQ6a29EfHLPcpDrltRgqevYFJp-V3XXUX1jyZd"
+      },
+      {
+        orderId: "HC-GI-84923",
         customer: "Karan Mehta",
         location: "New Delhi, Delhi",
-        time: "2 days ago",
+        time: "Yesterday",
         item: "Hand-Etched Acoustic Temple Bell",
         price: 950,
         payout: 893,
-        status: "Dispatched",
+        isDelivered: false,
+        deliveryStatus: "not_delivered",
+        fulfillmentStage: "in_transit",
+        status: "In Transit",
+        deliveredAt: null,
+        trackingNumber: "INPOST-84923",
+        courier: "India Post SpeedPost",
         img: "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=600&q=80"
+      },
+      {
+        orderId: "HC-GI-84924",
+        customer: "Rohan Nambiar",
+        location: "Chennai, Tamil Nadu",
+        time: "5 hours ago",
+        item: "Miniature Dancing Bobble Toy",
+        price: 650,
+        payout: 611,
+        isDelivered: false,
+        deliveryStatus: "not_delivered",
+        fulfillmentStage: "pending_packing",
+        status: "Processing",
+        deliveredAt: null,
+        trackingNumber: "INPOST-84924",
+        courier: "Guild Express Logistics",
+        img: "https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?auto=format&fit=crop&w=600&q=80"
+      },
+      {
+        orderId: "HC-GI-84925",
+        customer: "Sunita Deshmukh",
+        location: "Pune, Maharashtra",
+        time: "5 days ago",
+        item: "Jaali Filigree Carved Keepsake Box",
+        price: 2200,
+        payout: 2068,
+        isDelivered: true,
+        deliveryStatus: "delivered",
+        fulfillmentStage: "delivered",
+        status: "Delivered",
+        deliveredAt: "3 days ago",
+        trackingNumber: "INPOST-84925",
+        courier: "India Post SpeedPost",
+        img: "https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&w=600&q=80"
       }
     ];
 
@@ -2024,62 +2092,83 @@
       if (!container) return;
 
       const totalReceived = artisanOrders.length;
-      const newOrders = artisanOrders.filter(o => o.status === 'New Order').length;
-      const dispatchedOrders = artisanOrders.filter(o => o.status === 'Dispatched').length;
+      const deliveredCount = artisanOrders.filter(o => o.isDelivered === true || o.deliveryStatus === 'delivered' || o.status === 'Delivered').length;
+      const notDeliveredCount = totalReceived - deliveredCount;
+      const inTransitCount = artisanOrders.filter(o => !o.isDelivered && (o.fulfillmentStage === 'in_transit' || o.status === 'In Transit')).length;
+      const packingCount = notDeliveredCount - inTransitCount;
+      const delivRatio = totalReceived > 0 ? Math.round((deliveredCount / totalReceived) * 100) : 0;
 
-      // Update counters
+      // Update counters on screen
       const receivedEl = document.getElementById('artisan-orders-received-num');
-      const dispatchedEl = document.getElementById('artisan-orders-dispatched-num');
-      const newPill = document.getElementById('artisan-new-orders-pill');
+      const deliveredEl = document.getElementById('artisan-orders-delivered-num');
+      const notDeliveredEl = document.getElementById('artisan-orders-not-delivered-num');
+      const delivBadge = document.getElementById('artisan-deliv-percent-badge');
+      const notDelivBadge = document.getElementById('artisan-not-deliv-badge');
+      const subTransit = document.getElementById('artisan-sub-transit');
+      const subPacking = document.getElementById('artisan-sub-packing');
       const payoutEl = document.getElementById('artisan-payout-total');
 
       if (receivedEl) receivedEl.textContent = totalReceived;
-      if (dispatchedEl) dispatchedEl.textContent = dispatchedOrders;
-      if (newPill) newPill.textContent = `${newOrders} New Orders`;
+      if (deliveredEl) deliveredEl.textContent = deliveredCount;
+      if (notDeliveredEl) notDeliveredEl.textContent = notDeliveredCount;
+      if (delivBadge) delivBadge.textContent = `${delivRatio}% Ratio`;
+      if (notDelivBadge) notDelivBadge.textContent = `${notDeliveredCount} Active`;
+      if (subTransit) subTransit.textContent = inTransitCount;
+      if (subPacking) subPacking.textContent = packingCount > 0 ? packingCount : 0;
 
       const totalPayout = artisanOrders.reduce((sum, o) => sum + (o.payout || Math.round(o.price * 0.94)), 0);
       if (payoutEl) payoutEl.textContent = "₹" + totalPayout.toLocaleString('en-IN');
 
       const badgeAll = document.getElementById('count-badge-all');
-      const badgeNew = document.getElementById('count-badge-new');
-      const badgeShipped = document.getElementById('count-badge-shipped');
+      const badgeDelivered = document.getElementById('count-badge-delivered');
+      const badgeNotDelivered = document.getElementById('count-badge-not-delivered');
       if (badgeAll) badgeAll.textContent = totalReceived;
-      if (badgeNew) badgeNew.textContent = newOrders;
-      if (badgeShipped) badgeShipped.textContent = dispatchedOrders;
+      if (badgeDelivered) badgeDelivered.textContent = deliveredCount;
+      if (badgeNotDelivered) badgeNotDelivered.textContent = notDeliveredCount;
 
       // Filter list
       let displayList = artisanOrders;
-      if (currentOrderFilter === 'new') {
-        displayList = artisanOrders.filter(o => o.status === 'New Order');
-      } else if (currentOrderFilter === 'shipped') {
-        displayList = artisanOrders.filter(o => o.status === 'Dispatched');
+      if (currentOrderFilter === 'delivered') {
+        displayList = artisanOrders.filter(o => o.isDelivered === true || o.deliveryStatus === 'delivered' || o.status === 'Delivered');
+      } else if (currentOrderFilter === 'not_delivered') {
+        displayList = artisanOrders.filter(o => !(o.isDelivered === true || o.deliveryStatus === 'delivered' || o.status === 'Delivered'));
       }
 
       container.innerHTML = '';
       if (displayList.length === 0) {
-        container.innerHTML = '<div class="p-8 text-center text-text-muted text-xs bg-surface-muted rounded-xl border border-border">No orders found in this view.</div>';
+        container.innerHTML = '<div class="p-8 text-center text-text-muted text-xs bg-surface-muted rounded-xl border border-border">No orders found in this delivery filter.</div>';
         return;
       }
 
       displayList.forEach(ord => {
-        const isNew = ord.status === 'New Order';
+        const isDelivered = ord.isDelivered === true || ord.deliveryStatus === 'delivered' || ord.status === 'Delivered';
         const card = document.createElement('div');
         card.className = "flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-xl border " + 
-          (isNew ? "bg-green-50/40 border-green-200" : "bg-surface-muted/60 border-border") + " transition-all hover:shadow-sm";
+          (isDelivered ? "bg-green-50/40 border-green-200" : "bg-amber-50/30 border-amber-200") + " transition-all hover:shadow-sm";
 
         card.innerHTML = `
           <div class="flex items-center gap-3.5">
             <img src="${ord.img}" class="w-14 h-14 rounded-xl object-cover border border-border shrink-0 shadow-xs"/>
             <div>
               <div class="flex items-center gap-2 mb-1">
-                <span class="px-2 py-0.5 rounded text-[10px] font-bold ${isNew ? 'bg-green-100 text-green-800' : 'bg-slate-200 text-slate-700'}">
-                  ${ord.status}
-                </span>
-                <span class="text-text-muted text-[11px] font-mono">${ord.orderId}</span>
+                ${isDelivered ? `
+                  <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-green-100 text-green-800 border border-green-200 flex items-center gap-1">
+                    <span class="w-1.5 h-1.5 rounded-full bg-green-600"></span>
+                    <span>Delivered</span>
+                  </span>
+                ` : `
+                  <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-200 flex items-center gap-1">
+                    <span class="w-1.5 h-1.5 rounded-full bg-amber-600 animate-pulse"></span>
+                    <span>Not Delivered (${ord.fulfillmentStage === 'in_transit' ? 'In Transit' : 'Packing'})</span>
+                  </span>
+                `}
+                <span class="text-text-muted text-[11px] font-mono font-bold">${ord.orderId}</span>
                 <span class="text-text-muted text-[11px]">• ${ord.time}</span>
               </div>
               <h4 class="font-bold text-sm text-primary leading-tight">${ord.item}</h4>
-              <p class="text-xs text-text-muted mt-0.5">Buyer: <strong>${ord.customer}</strong> • ${ord.location}</p>
+              <p class="text-xs text-text-muted mt-0.5">
+                Buyer: <strong>${ord.customer}</strong> • ${ord.location} • <span class="font-mono text-[11px]">${ord.trackingNumber || 'INPOST-84920'}</span>
+              </p>
             </div>
           </div>
 
@@ -2089,15 +2178,15 @@
               <span class="font-serif font-bold text-base text-green-700">₹${ord.payout.toLocaleString('en-IN')}</span>
             </div>
             <div>
-              ${isNew ? `
-                <button onclick="markOrderDispatched('${ord.orderId}')" class="px-3 py-1.5 rounded-lg bg-primary hover:bg-secondary text-white text-xs font-bold transition-all flex items-center gap-1 shadow-xs">
-                  <span class="material-symbols-outlined text-[15px]">inventory_2</span>
-                  <span>Mark Dispatched</span>
+              ${!isDelivered ? `
+                <button onclick="markOrderDelivered('${ord.orderId}')" class="px-3 py-1.5 rounded-lg bg-green-600 hover:bg-green-700 text-white text-xs font-bold transition-all flex items-center gap-1 shadow-xs">
+                  <span class="material-symbols-outlined text-[15px]">check_circle</span>
+                  <span>Mark as Delivered</span>
                 </button>
               ` : `
-                <span class="text-[11px] font-semibold text-slate-500 flex items-center gap-1">
-                  <span class="material-symbols-outlined text-[15px] text-green-600">check_circle</span>
-                  <span>Dispatched via India Post</span>
+                <span class="text-[11px] font-bold text-green-700 flex items-center gap-1">
+                  <span class="material-symbols-outlined text-[15px]">verified</span>
+                  <span>Delivered (${ord.deliveredAt || 'Confirmed'})</span>
                 </span>
               `}
             </div>
@@ -2109,22 +2198,40 @@
 
     function filterArtisanOrders(filter) {
       currentOrderFilter = filter;
-      ['all', 'new', 'shipped'].forEach(f => {
-        const btn = document.getElementById(`btn-ord-${f}`);
+      ['all', 'delivered', 'not-delivered'].forEach(f => {
+        const btnId = `btn-ord-${f}`;
+        const btn = document.getElementById(btnId);
         if (btn) {
+          const isTarget = (f === 'all' && filter === 'all') || 
+                           (f === 'delivered' && filter === 'delivered') ||
+                           (f === 'not-delivered' && filter === 'not_delivered');
           btn.className = "artisan-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold transition-all " +
-            (f === filter ? "bg-primary text-white font-bold" : "bg-surface-muted text-text-main hover:bg-border");
+            (isTarget ? "bg-primary text-white font-bold" : "bg-surface-muted text-text-main hover:bg-border");
         }
       });
       renderArtisanStudioOrders();
     }
 
-    function markOrderDispatched(orderId) {
+    async function markOrderDelivered(orderId) {
       const ord = artisanOrders.find(o => o.orderId === orderId);
       if (ord) {
-        ord.status = 'Dispatched';
+        ord.isDelivered = true;
+        ord.deliveryStatus = 'delivered';
+        ord.status = 'Delivered';
+        ord.fulfillmentStage = 'delivered';
+        ord.deliveredAt = 'Just now';
+
+        // Update in Firestore database as well
+        if (window.HeritageDB) {
+          try {
+            await window.HeritageDB.updateOrderDelivery(orderId, true, 'delivered');
+          } catch (e) {
+            console.warn("Could not sync delivery update to Firestore:", e);
+          }
+        }
+
         renderArtisanStudioOrders();
-        alert(`Order ${orderId} marked as Dispatched! India Post pickup scheduled for 2:00 PM today.`);
+        alert(`✅ Order ${orderId} marked as DELIVERED!\n\nDatabase has been updated in real time.\nDelivered counter increased, Not Delivered counter decreased.`);
       }
     }
 

@@ -246,7 +246,7 @@ const SEED_ARTISANS = [
   }
 ];
 
-// Sample Initial Orders
+// Initial Seed Orders with Delivery Tracking
 const SEED_ORDERS = [
   {
     orderId: "HC-GI-84920",
@@ -258,9 +258,15 @@ const SEED_ORDERS = [
       { name: "Blue Pottery Tea Mug Set (Pair)", price: 1200, qty: 1 }
     ],
     totalAmount: 1650,
-    artisanPayout: 1551, // 94% direct share
-    status: "Confirmed",
-    createdAt: new Date(Date.now() - 86400000 * 2).toISOString()
+    artisanPayout: 1551,
+    status: "Delivered",
+    isDelivered: true,
+    deliveryStatus: "delivered",
+    fulfillmentStage: "delivered",
+    deliveredAt: new Date(Date.now() - 86400000).toISOString(),
+    trackingNumber: "INPOST-84920",
+    courier: "India Post SpeedPost",
+    createdAt: new Date(Date.now() - 86400000 * 4).toISOString()
   },
   {
     orderId: "HC-GI-84921",
@@ -272,8 +278,90 @@ const SEED_ORDERS = [
     ],
     totalAmount: 3200,
     artisanPayout: 3008,
-    status: "In Crafting",
+    status: "In Transit",
+    isDelivered: false,
+    deliveryStatus: "not_delivered",
+    fulfillmentStage: "in_transit",
+    deliveredAt: null,
+    trackingNumber: "INPOST-84921",
+    courier: "Guild Express Logistics",
+    createdAt: new Date(Date.now() - 86400000 * 2).toISOString()
+  },
+  {
+    orderId: "HC-GI-84922",
+    customerName: "Pooja Hegde",
+    customerEmail: "pooja@example.com",
+    customerLocation: "Mumbai, Maharashtra",
+    items: [
+      { name: "Handwoven Ikat Silk-Cotton Stole", price: 1450, qty: 1 }
+    ],
+    totalAmount: 1450,
+    artisanPayout: 1363,
+    status: "Delivered",
+    isDelivered: true,
+    deliveryStatus: "delivered",
+    fulfillmentStage: "delivered",
+    deliveredAt: new Date(Date.now() - 86400000 * 2).toISOString(),
+    trackingNumber: "INPOST-84922",
+    courier: "India Post SpeedPost",
+    createdAt: new Date(Date.now() - 86400000 * 5).toISOString()
+  },
+  {
+    orderId: "HC-GI-84923",
+    customerName: "Karan Mehta",
+    customerEmail: "karan@example.com",
+    customerLocation: "New Delhi, Delhi",
+    items: [
+      { name: "Hand-Etched Acoustic Temple Bell", price: 950, qty: 1 }
+    ],
+    totalAmount: 950,
+    artisanPayout: 893,
+    status: "In Transit",
+    isDelivered: false,
+    deliveryStatus: "not_delivered",
+    fulfillmentStage: "in_transit",
+    deliveredAt: null,
+    trackingNumber: "INPOST-84923",
+    courier: "India Post SpeedPost",
     createdAt: new Date(Date.now() - 86400000).toISOString()
+  },
+  {
+    orderId: "HC-GI-84924",
+    customerName: "Rohan Nambiar",
+    customerEmail: "rohan@example.com",
+    customerLocation: "Chennai, Tamil Nadu",
+    items: [
+      { name: "Miniature Dancing Bobble Toy", price: 650, qty: 1 }
+    ],
+    totalAmount: 650,
+    artisanPayout: 611,
+    status: "Processing",
+    isDelivered: false,
+    deliveryStatus: "not_delivered",
+    fulfillmentStage: "pending_packing",
+    deliveredAt: null,
+    trackingNumber: "INPOST-84924",
+    courier: "Guild Express Logistics",
+    createdAt: new Date(Date.now() - 3600000 * 5).toISOString()
+  },
+  {
+    orderId: "HC-GI-84925",
+    customerName: "Sunita Deshmukh",
+    customerEmail: "sunita@example.com",
+    customerLocation: "Pune, Maharashtra",
+    items: [
+      { name: "Jaali Filigree Carved Keepsake Box", price: 2200, qty: 1 }
+    ],
+    totalAmount: 2200,
+    artisanPayout: 2068,
+    status: "Delivered",
+    isDelivered: true,
+    deliveryStatus: "delivered",
+    fulfillmentStage: "delivered",
+    deliveredAt: new Date(Date.now() - 86400000 * 3).toISOString(),
+    trackingNumber: "INPOST-84925",
+    courier: "India Post SpeedPost",
+    createdAt: new Date(Date.now() - 86400000 * 6).toISOString()
   }
 ];
 
@@ -472,9 +560,11 @@ class FirebaseDatabaseService {
     await this.db.collection("products").doc(productId).delete();
   }
 
-  // Create an order
+  // Create an order with Delivery Tracking fields
   async createOrder(orderData) {
     const orderId = "HC-GI-" + Math.floor(10000 + Math.random() * 90000);
+    const trackingNumber = "INPOST-" + Math.floor(10000 + Math.random() * 90000);
+    
     const fullOrder = {
       orderId,
       customerName: orderData.customerName || "Patron Craft Connoisseur",
@@ -483,9 +573,18 @@ class FirebaseDatabaseService {
       items: orderData.items || [],
       totalAmount: orderData.totalAmount || 0,
       artisanPayout: Math.round((orderData.totalAmount || 0) * 0.94),
-      status: "Confirmed",
+      status: "Processing",
+      isDelivered: false,
+      deliveryStatus: "not_delivered",
+      fulfillmentStage: "pending_packing",
+      deliveredAt: null,
+      trackingNumber,
+      courier: "India Post SpeedPost",
       createdAt: new Date().toISOString()
     };
+
+    // Update in-memory seed list
+    SEED_ORDERS.unshift(fullOrder);
 
     if (this.init() && window.isFirebaseConfigSet()) {
       try {
@@ -496,6 +595,60 @@ class FirebaseDatabaseService {
     }
 
     return fullOrder;
+  }
+
+  // Update Delivery Status (Delivered vs Not Delivered)
+  async updateOrderDelivery(orderId, isDelivered, stage = null) {
+    const fulfillmentStage = stage || (isDelivered ? "delivered" : "in_transit");
+    const status = isDelivered ? "Delivered" : (fulfillmentStage === "in_transit" ? "In Transit" : "Processing");
+    const deliveredAt = isDelivered ? new Date().toISOString() : null;
+
+    const updates = {
+      isDelivered: !!isDelivered,
+      deliveryStatus: isDelivered ? "delivered" : "not_delivered",
+      fulfillmentStage,
+      status,
+      deliveredAt
+    };
+
+    // Update in-memory fallback
+    const localOrder = SEED_ORDERS.find(o => (o.orderId || o.id) === orderId);
+    if (localOrder) {
+      Object.assign(localOrder, updates);
+    }
+
+    if (this.init() && window.isFirebaseConfigSet()) {
+      try {
+        await this.db.collection("orders").doc(orderId).update({
+          ...updates,
+          updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+      } catch (err) {
+        console.warn("Firestore order update error:", err);
+      }
+    }
+
+    return updates;
+  }
+
+  // Compute live Delivery Statistics (Delivered vs Not Delivered)
+  computeDeliveryStats(ordersList) {
+    const list = ordersList || SEED_ORDERS;
+    const total = list.length;
+    const delivered = list.filter(o => o.isDelivered === true || o.deliveryStatus === 'delivered' || o.status === 'Delivered').length;
+    const notDelivered = total - delivered;
+    const inTransit = list.filter(o => !o.isDelivered && (o.fulfillmentStage === 'in_transit' || o.status === 'In Transit' || o.status === 'Dispatched')).length;
+    const pendingPacking = notDelivered - inTransit;
+    const deliveredPercent = total > 0 ? Math.round((delivered / total) * 100) : 0;
+
+    return {
+      totalOrders: total,
+      deliveredCount: delivered,
+      notDeliveredCount: notDelivered,
+      inTransitCount: inTransit,
+      pendingPackingCount: pendingPacking > 0 ? pendingPacking : 0,
+      deliveredPercentage: deliveredPercent
+    };
   }
 
   // Get orders

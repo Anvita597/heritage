@@ -125,8 +125,8 @@ Stores master heritage artisans and their hereditary lineages.
 }
 ```
 
-### 3. `orders` Collection
-Stores orders placed by patrons with automatic calculation of the 94% direct artisan payout.
+### 3. `orders` Collection (with Delivery Tracking)
+Stores patron orders with direct artisan payout and real-time delivery lifecycle tracking:
 ```json
 {
   "orderId": "HC-GI-84920",
@@ -139,10 +139,25 @@ Stores orders placed by patrons with automatic calculation of the 94% direct art
   ],
   "totalAmount": 1650,
   "artisanPayout": 1551,
-  "status": "Confirmed",
-  "createdAt": "2026-11-06T00:00:00.000Z"
+  "status": "Delivered",
+  "isDelivered": true,
+  "deliveryStatus": "delivered",
+  "fulfillmentStage": "delivered",
+  "deliveredAt": "2026-11-05T14:30:00.000Z",
+  "trackingNumber": "INPOST-84920",
+  "courier": "India Post SpeedPost",
+  "createdAt": "2026-11-02T10:00:00.000Z"
 }
 ```
+
+#### Delivery Tracking Fields:
+* **`isDelivered`** (*boolean*): `true` if delivered, `false` if not delivered.
+* **`deliveryStatus`** (*string*): `"delivered"` | `"not_delivered"`.
+* **`fulfillmentStage`** (*string*): `"pending_packing"` | `"in_transit"` | `"delivered"`.
+* **`deliveredAt`** (*string | null*): Timestamp of successful delivery.
+* **`trackingNumber`** (*string*): Postal tracking number (e.g. `INPOST-84920`).
+* **`updateOrderDelivery(orderId, isDelivered, stage)`**: Database method to update status in 1 click.
+* **`computeDeliveryStats()`**: Computes live breakdown of Delivered vs Not Delivered orders.
 
 ---
 
